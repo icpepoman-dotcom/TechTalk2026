@@ -1,0 +1,984 @@
+import { DaySchedule, Speaker, ShortCourse, RegistrationTier, CollaboratingOrg } from '../types';
+import spkApagImg from '../assets/images/speaker_dr_apag_1791926653953.jpg';
+import spkMaglalangImg from '../assets/images/speaker_engr_maglalang_1791926654720.jpg';
+import spkAlbadiImg from '../assets/images/speaker_dr_albadi_1791926655546.jpg';
+import spkCareonImg from '../assets/images/speaker_careon_tech_1791926655896.jpg';
+import spkHernandezImg from '../assets/images/speaker_hernandez_ai_1791926656006.jpg';
+import spkBustamanteImg from '../assets/images/speaker_engr_bustamante_1791927625251.jpg';
+import spkMonsadaImg from '../assets/images/speaker_engr_monsada_1791927625971.jpg';
+import spkTambaoanImg from '../assets/images/speaker_engr_tambaoan_1791927626145.jpg';
+import spkCanlasImg from '../assets/images/speaker_dr_canlas_1791927626152.jpg';
+import spkManglicmotImg from '../assets/images/speaker_engr_manglicmot_1791927626406.jpg';
+import spkAgatepImg from '../assets/images/speaker_engr_agatep_1791927651523.jpg';
+import spkCrisostomoImg from '../assets/images/speaker_dr_crisostomo_1791927652140.jpg';
+import spkAerConfereesImg from '../assets/images/speaker_aer_conferees_1791927650929.jpg';
+import spkIntpeConfereesImg from '../assets/images/speaker_intpe_conferees_1791927652021.jpg';
+
+export const EVENT_DETAILS = {
+  name: "ICpEP-Oman TechTalk 2026",
+  chapter: "Institute of Computer Engineers of the Philippines — Oman Chapter",
+  theme: "Engineering the Digital Future: Technology, Innovation and Professional Excellence.",
+  tagline: "Connect. Learn. Innovate. Celebrate.",
+  subheading: "Empowering Engineers and Computing Professionals through Technology and Global Certification.",
+  datesSummary: "October 30 – 31, 2026",
+  venueSummary: "Wyndham Hotel, Muscat, Oman & Virtual Breakout Hub",
+  bannerNotice: "Limited slots available — scan or click to register",
+  registrationDeadline: "October 25, 2026",
+  slotsRemaining: 47,
+  totalCapacity: 350,
+  contactEmail: "icpep.oman@gmail.com",
+  globalRegistrationUrl: "",
+  useCustomRegistrationRedirect: false,
+  qrCodeCustomUrl: "",
+  qrCodeTargetUrl: "",
+  qrCodeType: "auto" as "auto" | "custom_image",
+  qrCodeCenterLogo: true,
+  footerTags: [
+    "Technology",
+    "Professional Growth",
+    "Industry Connections",
+    "Community Impact"
+  ]
+};
+
+export const COLLABORATING_ORGS: CollaboratingOrg[] = [
+  {
+    id: "partner_ptc",
+    name: "Philippine Technological Council (PTC) MENA",
+    subtitle: "The Umbrella Organization of 13 PRC-Accredited Engineering Disciplines",
+    shortName: "PTC MENA",
+    role: "Professional Accreditation & Registry Partner",
+    accreditations: ["ASEAN Engineer Registry (AER)", "International Professional Engineer (intPE)"],
+    websiteUrl: "https://ptc.org.ph"
+  },
+  {
+    id: "partner_utas",
+    name: "University of Technology and Applied Sciences",
+    subtitle: "Sultanate of Oman's Premier Higher Education & Applied Tech Institution",
+    shortName: "UTAS Oman",
+    role: "Academic & Research Partner",
+    accreditations: ["Curriculum & Student Innovation Exchange"],
+    websiteUrl: "https://www.utas.edu.om"
+  },
+  {
+    id: "partner_ieee",
+    name: "IEEE Oman Section",
+    subtitle: "Institute of Electrical and Electronics Engineers — Sultanate of Oman",
+    shortName: "IEEE Oman",
+    role: "Technical Co-Sponsor",
+    accreditations: ["Power, Computing & Smart Grid Knowledge Sharing"],
+    websiteUrl: "https://ieee.org"
+  },
+  {
+    id: "partner_cisco",
+    name: "Cisco Networking Academy",
+    subtitle: "Global Skills-to-Jobs Education Program",
+    shortName: "Cisco NetAcad",
+    role: "Technology & Virtual Course Partner",
+    accreditations: ["Digital Badges & Remote Course Modules"],
+    websiteUrl: "https://www.netacad.com"
+  }
+];
+
+export const GLOBAL_PARTNERSHIPS = [
+  {
+    title: "Philippine Technological Council (PTC)",
+    description: "Globally Recognized, Professionally Empowered — signatory to the Washington Accord and International Engineering Alliance.",
+    highlight: "AER & intPE Conferments"
+  },
+  {
+    title: "Cisco Networking Academy",
+    description: "Official Technology Partner providing accredited self-paced cybersecurity, networking, and cloud computing pathways.",
+    highlight: "NetAcad Curriculum Access"
+  },
+  {
+    title: "IEEE Oman Chapter",
+    description: "Promoting technological excellence, power systems innovation, and research collaborations across the GCC region.",
+    highlight: "GCC Engineering Exchange"
+  },
+  {
+    title: "Leading Global Tech Firms (Canada & Mexico)",
+    description: "Industry insights and direct knowledge transfer from ASMPT SMT Solutions (Mexico) and CDW Corporation (Canada).",
+    highlight: "Intelligent Factory & Enterprise AI"
+  }
+];
+
+export const DAY_SCHEDULES: DaySchedule[] = [
+  {
+    day: 1,
+    date: "October 30, 2026",
+    title: "Day 1 — Technology Talk & Anniversary Gala Night",
+    mode: "Face-to-Face",
+    venue: "Wyndham Hotel, Muscat, Sultanate of Oman",
+    subtitle: "Connect & Celebrate — High-level technology keynotes, professional licensing talks, ASEAN Engineer Registry conferment, and the annual gala.",
+    sessions: [
+      {
+        period: "Morning Session",
+        timeRange: "08:00 – 13:00 GST",
+        title: "Session I: Learn & Develop — Technology & Professional Org Talks",
+        items: [
+          {
+            id: "d1-01",
+            time: "08:00 – 09:00",
+            title: "Registration, Welcome Breakfast & Networking",
+            description: "Check-in of in-person delegates, distribution of conference kits, badge issuance, and coffee networking.",
+            category: "ceremony"
+          },
+          {
+            id: "d1-02",
+            time: "09:00 – 09:10",
+            title: "Opening Ceremony",
+            description: "Invocation, National Anthems of the Sultanate of Oman and the Republic of the Philippines, and ICpEP Hymn.",
+            category: "ceremony"
+          },
+          {
+            id: "d1-03",
+            time: "09:10 – 09:20",
+            title: "Welcome Address",
+            description: "Opening of the TechTalk 2026 conference and welcoming of local and international delegations.",
+            speakers: [
+              {
+                name: "Engr. Leopoldo Jr Maglalang",
+                role: "ICpEP-Oman President",
+                organization: "ICpEP-Oman Chapter"
+              }
+            ],
+            category: "keynote"
+          },
+          {
+            id: "d1-04",
+            time: "09:20 – 09:30",
+            title: "Anniversary Message & Organizational Milestones",
+            description: "Celebrating ICpEP-Oman's leadership journey, regional achievements, and commitment to overseas computer engineers.",
+            speakers: [
+              {
+                name: "Engr. Jonathan PG Tambaoan",
+                role: "VP Education, ICpEP-Oman",
+                organization: "ICpEP-Oman Chapter"
+              }
+            ],
+            category: "keynote"
+          },
+          {
+            id: "d1-05",
+            time: "09:30 – 09:40",
+            title: "Opening Keynote Address I",
+            description: "Strategic insights on higher education, engineering standards, and international competitiveness of Filipino computer engineers.",
+            speakers: [
+              {
+                name: "Dr. Desiderio A. Apag III",
+                role: "CHED Commissioner & ICpEP National President",
+                organization: "Commission on Higher Education (CHED)"
+              }
+            ],
+            category: "keynote"
+          },
+          {
+            id: "d1-06",
+            time: "09:40 – 09:50",
+            title: "Opening Keynote Address II",
+            description: "Diplomatic relations, professional welfare, and government support for Filipino professionals in the Sultanate of Oman.",
+            speakers: [
+              {
+                name: "Dignitary Representative",
+                role: "Philippine Embassy in Muscat, Oman",
+                organization: "Department of Foreign Affairs"
+              }
+            ],
+            category: "keynote"
+          },
+          {
+            id: "d1-07",
+            time: "09:50 – 10:00",
+            title: "Professional Org Talk: The Future of Filipino Engineers",
+            description: "Professional excellence, global recognition, and engineering leadership across borderless economies.",
+            speakers: [
+              {
+                name: "Engr. Leopoldo Jr Maglalang",
+                role: "PTC President & ICpEP-Oman President",
+                organization: "Philippine Technological Council (PTC)"
+              }
+            ],
+            category: "org-talk"
+          },
+          {
+            id: "d1-08",
+            time: "10:00 – 10:10",
+            title: "Professional Org Talk: Pathways to Professional Engineering Registration",
+            description: "Competency frameworks, portfolio assessment, peer review, and international recognition requirements.",
+            speakers: [
+              {
+                name: "Engr. Leopoldo Jr Maglalang",
+                role: "Chair, PTC Engineers Registration Board",
+                organization: "PTC Engineers Registration Board (PTC-ERB)"
+              }
+            ],
+            category: "org-talk"
+          },
+          {
+            id: "d1-09",
+            time: "10:10 – 10:20",
+            title: "Professional Org Talk: Engineering Beyond Borders",
+            description: "International practice mobility, ASEAN recognition frameworks, and emerging opportunities across the MENA region.",
+            speakers: [
+              {
+                name: "Engr. Trese Bustamante",
+                role: "Vice Chair, PTC-ERB & PTC-MENA International Affairs",
+                organization: "PTC MENA International Affairs"
+              }
+            ],
+            category: "org-talk"
+          },
+          {
+            id: "d1-10",
+            time: "10:20 – 10:50",
+            title: "Industry Talk: Maintaining High Renewable Energy Penetration in Modern Power Grids",
+            description: "Grid stability, renewable integration models, and digital power management in Oman and the GCC.",
+            speakers: [
+              {
+                name: "Dr. Abdullah Al-Badi",
+                role: "Chairman",
+                organization: "IEEE Oman Chapter"
+              }
+            ],
+            category: "industry-talk"
+          },
+          {
+            id: "d1-11",
+            time: "10:50 – 11:40",
+            title: "Industry Talk: Enabling the Intelligent Factory",
+            description: "Hardware, software, and service solutions helping modern electronics manufacturers build the intelligent smart factory.",
+            speakers: [
+              {
+                name: "Engr. Raymond Careon",
+                role: "Project Engineer",
+                organization: "ASMPT SMT Solutions – Mexico"
+              }
+            ],
+            category: "industry-talk"
+          },
+          {
+            id: "d1-12",
+            time: "11:40 – 12:10",
+            title: "Industry Talk: From Strategy to Scale — Building Secure, Production-Ready AI Solutions",
+            description: "Enterprise AI adoption, security postures, zero-trust inference pipelines, and scalable network architectures.",
+            speakers: [
+              {
+                name: "Engr. Reginald Norris Hernandez",
+                role: "AI Enthusiast Manager – Network Solution",
+                organization: "CDW – Canada"
+              }
+            ],
+            category: "industry-talk"
+          },
+          {
+            id: "d1-13",
+            time: "12:10 – 12:30",
+            title: "Industry Leaders Panel: What Skills Will Engineers/IT/ComSci Need in the Next Five Years?",
+            description: "High-level interactive panel examining AI orchestration, cloud computing, cybersecurity, and global professional licensing.",
+            speakers: [
+              {
+                name: "Dr. Ferdi Canlas",
+                role: "Panel Moderator",
+                organization: "ICpEP-Oman TechTalk 2026"
+              }
+            ],
+            category: "industry-talk"
+          },
+          {
+            id: "d1-14",
+            time: "12:30 – 13:00",
+            title: "TechTalk Day 2 Orientation & Launch of ICpEP-Oman Virtual Classroom",
+            description: "Orientation for Day 2 virtual breakouts, Cisco NetAcad integration, and rollout of self-paced certification tracks.",
+            category: "ceremony"
+          }
+        ]
+      },
+      {
+        period: "Afternoon Session",
+        timeRange: "14:00 – 17:00 GST",
+        title: "Session II: ASEAN Engineer Registry (AER) Formal Conferment",
+        items: [
+          {
+            id: "d1-15",
+            time: "14:00 – 15:00",
+            title: "Conferment Registration & Robing",
+            description: "Robing of conferees, verification of credentials, and assembly for the formal procession.",
+            category: "conferment"
+          },
+          {
+            id: "d1-16",
+            time: "15:00 – 15:10",
+            title: "Welcome Remarks",
+            speakers: [
+              {
+                name: "Engr. Gerry Manglicmot",
+                role: "PTC-Presidential Adviser",
+                organization: "PTC Global MENA – Oman"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d1-17",
+            time: "15:10 – 15:20",
+            title: "Opening Message",
+            speakers: [
+              {
+                name: "Engr. Federico A. Monsada",
+                role: "President",
+                organization: "Philippine Technological Council (PTC)"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d1-18",
+            time: "15:20 – 15:30",
+            title: "Presentation of Conferees",
+            description: "Formal call and presentation of candidates for the ASEAN Engineer Registry.",
+            category: "conferment"
+          },
+          {
+            id: "d1-19",
+            time: "15:30 – 15:45",
+            title: "Charging of the Conferees",
+            speakers: [
+              {
+                name: "Engr. Romy R. Agatep",
+                role: "Chair, PTC Engineers Registration Board",
+                organization: "PTC-ERB"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d1-20",
+            time: "15:45 – 16:00",
+            title: "Oath-Taking & Conferment Exercise",
+            description: "Administration of the ASEAN Engineer oath, investiture with AER medallions and conferment certificates.",
+            speakers: [
+              { name: "Engr. Federico A. Monsada", role: "PTC President" },
+              { name: "Engr. Romy R. Agatep", role: "Chair PTC-ERB" },
+              { name: "Engr. Trese Bustamante", role: "Vice Chair PTC-ERB" },
+              { name: "Engr. Gerry Manglicmot", role: "PTC-Presidential Adviser" }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d1-21",
+            time: "16:00 – 16:30",
+            title: "Batch's Valedictory Speech",
+            description: "Speech delivered by the representative of the Newly Conferred ASEAN Engineers.",
+            category: "conferment"
+          },
+          {
+            id: "d1-22",
+            time: "16:30 – 16:40",
+            title: "Congratulatory Message",
+            speakers: [
+              {
+                name: "Engr. Trese Bustamante",
+                role: "Vice Chair, PTC-ERB & PTC-MENA International Affairs",
+                organization: "PTC MENA"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d1-23",
+            time: "16:40 – 16:50",
+            title: "Vote of Thanks & Conferment Recessional",
+            speakers: [
+              {
+                name: "Dr. Desiderio A. Apag III",
+                role: "ICpEP National President",
+                organization: "ICpEP National"
+              }
+            ],
+            category: "conferment"
+          }
+        ]
+      },
+      {
+        period: "Evening Session",
+        timeRange: "18:00 – 20:30 GST",
+        title: "Session III: ICpEP-Oman Anniversary Gala Night 2026",
+        items: [
+          {
+            id: "d1-24",
+            time: "18:00 – 19:00",
+            title: "Gala Dinner Banquet & Fellowship",
+            description: "Grand gala buffet dinner at Wyndham Hotel, live ambient music, and fellowship with dignitaries.",
+            category: "gala"
+          },
+          {
+            id: "d1-25",
+            time: "19:00 – 19:10",
+            title: "Gala Opening Ceremony",
+            description: "Invocation, ceremonial toasts, and welcome protocol.",
+            category: "gala"
+          },
+          {
+            id: "d1-26",
+            time: "19:10 – 19:20",
+            title: "Anniversary Message",
+            speakers: [
+              {
+                name: "Dr. Ana Shiela Crisostomo",
+                role: "ICpEP-Oman VP Internal",
+                organization: "ICpEP-Oman Chapter"
+              }
+            ],
+            category: "gala"
+          },
+          {
+            id: "d1-27",
+            time: "19:20 – 19:30",
+            title: "Special Anniversary Presidential Address",
+            speakers: [
+              {
+                name: "Dr. Desiderio A. Apag III",
+                role: "ICpEP National President",
+                organization: "ICpEP National"
+              }
+            ],
+            category: "gala"
+          },
+          {
+            id: "d1-28",
+            time: "19:30 – 19:40",
+            title: "ICpEP-Oman Anniversary Video Presentation",
+            description: "Documentary commemorating organizational milestones, community projects, and chapter history.",
+            category: "gala"
+          },
+          {
+            id: "d1-29",
+            time: "19:40 – 20:00",
+            title: "Recognition of ICpEP-Oman Members & Partners",
+            description: "Awarding of plaques of appreciation, outstanding member awards, partner citations, and sponsors.",
+            category: "gala"
+          },
+          {
+            id: "d1-30",
+            time: "20:00 – 20:30",
+            title: "Special Anniversary Presentation & Fellowship Socials",
+            description: "Anniversary cultural showcase, musical presentation, commemorative group photography, and networking toast.",
+            category: "gala"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    day: 2,
+    date: "October 31, 2026",
+    title: "Day 2 — Virtual Workshops & intPE Conferment",
+    mode: "Online",
+    venue: "ICpEP-Oman Virtual Conference Hub & Cisco Webex",
+    subtitle: "Learn & Develop — Interactive breakout workshops, 6 full remote short courses, and the International Professional Engineer (intPE) Conferment.",
+    sessions: [
+      {
+        period: "Morning Session",
+        timeRange: "07:30 – 13:00 GST",
+        title: "Session I: Virtual Workshops & Specialized Technical Breakouts",
+        items: [
+          {
+            id: "d2-01",
+            time: "07:30 – 08:00",
+            title: "Virtual Lobby Opens & Audio-Visual Check",
+            description: "Delegate entry, technical check, audio setup, and digital materials download.",
+            category: "workshop"
+          },
+          {
+            id: "d2-02",
+            time: "08:00 – 08:50",
+            title: "Online Registration & Virtual Networking Breakouts",
+            description: "Networking rooms categorized by specializations (AI, Cloud, Cyber, Hardware).",
+            category: "workshop"
+          },
+          {
+            id: "d2-03",
+            time: "08:50 – 09:00",
+            title: "Opening Ceremony of Online Workshop Day",
+            description: "Opening prayer, virtual house rules, and overview of the Day 2 learning tracks.",
+            category: "workshop"
+          },
+          {
+            id: "d2-04",
+            time: "09:00 – 09:10",
+            title: "Welcome Address",
+            speakers: [
+              {
+                name: "Engr. Jonathan PG Tambaoan",
+                role: "ICpEP-Oman VP Education",
+                organization: "ICpEP-Oman Chapter"
+              }
+            ],
+            category: "workshop"
+          },
+          {
+            id: "d2-05",
+            time: "09:10 – 10:30",
+            title: "Workshop Session 1: Enabling the Intelligent Factory",
+            description: "Deep dive into hardware, software, and service solutions helping electronics manufacturers build the Intelligent Factory. Practical automation use cases, SMT machine telemetry, and predictive maintenance.",
+            speakers: [
+              {
+                name: "Engr. Raymond Careon",
+                role: "Project Engineer",
+                organization: "ASMPT SMT Solutions – Mexico"
+              }
+            ],
+            category: "workshop"
+          },
+          {
+            id: "d2-06",
+            time: "10:30 – 12:00",
+            title: "Workshop Session 2: From Network Strategy to AI at Scale",
+            description: "Architecting enterprise-ready, secure, resilient network and compute infrastructure for production AI inference, zero-trust enforcement, and high-throughput workflows.",
+            speakers: [
+              {
+                name: "Engr. Reginald Norris Hernandez",
+                role: "AI Enthusiast Manager – Network Solution",
+                organization: "CDW – Canada"
+              }
+            ],
+            category: "workshop"
+          },
+          {
+            id: "d2-07",
+            time: "12:00 – 13:00",
+            title: "Workshop Session 3: PTC Global MENA Oman Write-Shop",
+            description: "Practical mentoring session on preparing engineering competency portfolios for international registration ('Attend Now, Pay Later' initiative). Hands-on documentation guidance.",
+            speakers: [
+              {
+                name: "Engr. Trese Bustamante",
+                role: "Vice Chair, PTC-ERB & PTC-MENA International Affairs",
+                organization: "PTC MENA"
+              }
+            ],
+            category: "workshop"
+          }
+        ]
+      },
+      {
+        period: "Afternoon Session",
+        timeRange: "14:00 – 16:30 GST",
+        title: "Session II: International Professional Engineer (intPE) Formal Conferment",
+        items: [
+          {
+            id: "d2-08",
+            time: "14:00 – 15:00",
+            title: "intPE Virtual Conferment Check-In & Roll Call",
+            description: "Verification of candidates and pre-conferment briefing.",
+            category: "conferment"
+          },
+          {
+            id: "d2-09",
+            time: "15:00 – 15:10",
+            title: "Welcome Remarks",
+            speakers: [
+              {
+                name: "Engr. Gerry Manglicmot",
+                role: "PTC-Presidential Adviser",
+                organization: "PTC Global MENA – Oman"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d2-10",
+            time: "15:10 – 15:20",
+            title: "Opening Message",
+            speakers: [
+              {
+                name: "Engr. Federico A. Monsada",
+                role: "PTC President",
+                organization: "PTC"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d2-11",
+            time: "15:20 – 15:30",
+            title: "Presentation of Conferees",
+            description: "Master of Ceremony presents the cohort of candidate engineers.",
+            category: "conferment"
+          },
+          {
+            id: "d2-12",
+            time: "15:30 – 15:45",
+            title: "Charging of the Conferees",
+            speakers: [
+              {
+                name: "Engr. Romy R. Agatep",
+                role: "Chair, PTC Engineers Registration Board",
+                organization: "PTC-ERB"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d2-13",
+            time: "15:45 – 16:00",
+            title: "Oath-Taking & Conferment Exercise",
+            description: "Solemn oath-taking for the International Professional Engineer register.",
+            speakers: [
+              { name: "Engr. Federico A. Monsada", role: "PTC President" },
+              { name: "Engr. Romy R. Agatep", role: "Chair PTC-ERB" },
+              { name: "Engr. Trese Bustamante", role: "Vice Chair PTC-ERB" },
+              { name: "Engr. Gerry Manglicmot", role: "PTC-Presidential Adviser" }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d2-14",
+            time: "16:00 – 16:30",
+            title: "New intPE Engineers' Batch Speech",
+            description: "Address by the representative of the newly registered International Professional Engineers.",
+            category: "conferment"
+          },
+          {
+            id: "d2-15",
+            time: "16:30 – 16:40",
+            title: "Congratulatory Message",
+            speakers: [
+              {
+                name: "Engr. Trese Bustamante",
+                role: "Vice Chair, PTC-ERB & PTC-MENA International Affairs",
+                organization: "PTC MENA"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d2-16",
+            time: "16:40 – 16:50",
+            title: "Vote of Thanks",
+            speakers: [
+              {
+                name: "Engr. Leopoldo Jr Maglalang",
+                role: "ICpEP-Oman President",
+                organization: "ICpEP-Oman Chapter"
+              }
+            ],
+            category: "conferment"
+          },
+          {
+            id: "d2-17",
+            time: "16:50 – 17:30",
+            title: "Virtual Photo Opportunity & Official Adjournment",
+            description: "Commemorative group photo capture, distribution of digital certificate tokens, and concluding announcements.",
+            category: "conferment"
+          }
+        ]
+      }
+    ]
+  }
+];
+
+export const SHORT_COURSES: ShortCourse[] = [
+  {
+    id: "sc-1",
+    title: "Introduction to Modern Artificial Intelligence",
+    code: "AI-101",
+    description: "Foundational AI architectures, large language models, prompt engineering, generative tooling, and production safety guidelines.",
+    duration: "Self-Paced (approx. 6 hrs)",
+    competency: "AI & Machine Learning",
+    partner: "ICpEP Classroom & Industry Partners"
+  },
+  {
+    id: "sc-2",
+    title: "Introduction to Cybersecurity",
+    code: "SEC-101",
+    description: "Defensive perimeter fundamentals, zero-trust hygiene, malware classification, threat hunting, and compliance standards.",
+    duration: "Self-Paced (approx. 8 hrs)",
+    competency: "Information Security",
+    partner: "Cisco Networking Academy"
+  },
+  {
+    id: "sc-3",
+    title: "Introduction to IoT & Digital Transformation",
+    code: "IOT-101",
+    description: "Sensor networks, microcontroller telemetry, MQTT protocols, cloud edge processing, and industrial IoT architecture.",
+    duration: "Self-Paced (approx. 6 hrs)",
+    competency: "Smart Systems & Edge",
+    partner: "Cisco Networking Academy"
+  },
+  {
+    id: "sc-4",
+    title: "Introduction to Data Science",
+    code: "DS-101",
+    description: "Exploratory data analysis, statistical methods, Python data pipelines, visualization frameworks, and predictive modeling.",
+    duration: "Self-Paced (approx. 8 hrs)",
+    competency: "Analytics & Applied Math",
+    partner: "Cisco Networking Academy"
+  },
+  {
+    id: "sc-5",
+    title: "Linux Unleashed (Linux Unhatched)",
+    code: "LNX-101",
+    description: "Command-line mastery, shell scripting, package management, POSIX permissions, and foundational administration for cloud engineers.",
+    duration: "Self-Paced (approx. 5 hrs)",
+    competency: "Systems & Infrastructure",
+    partner: "Cisco Networking Academy"
+  },
+  {
+    id: "sc-6",
+    title: "Soft Skills — Creating Compelling Reports",
+    code: "COMM-101",
+    description: "Executive technical writing, structured engineering proposals, executive summaries, data storytelling, and stakeholder presentation.",
+    duration: "Self-Paced (approx. 4 hrs)",
+    competency: "Professional Communication",
+    partner: "ICpEP Professional Development"
+  }
+];
+
+export const WORKSHOP_TRACKS = [
+  {
+    title: "Artificial Intelligence & Generative AI",
+    summary: "Production-ready AI architectures, generative agents, and ethical enterprise adoption.",
+    topics: ["LLM Orchestration", "Enterprise AI Safety", "Hardware Accelerators", "Agent Workflows"]
+  },
+  {
+    title: "Cybersecurity Essentials",
+    summary: "Defending corporate networks and critical computing infrastructure against modern threat actors.",
+    topics: ["Zero-Trust Networks", "Threat Intelligence", "Vulnerability Auditing", "Incident Response"]
+  },
+  {
+    title: "Networking & Digital Infrastructure",
+    summary: "Modern enterprise architectures, hybrid multi-cloud pipelines, and software-defined WANs.",
+    topics: ["SD-WAN & SASE", "Multi-Cloud Interconnect", "High-Throughput Fabrics", "Telemetry"]
+  },
+  {
+    title: "IoT & Smart Technology",
+    summary: "Sensor fusion, industrial robotics, intelligent manufacturing, and edge computing.",
+    topics: ["Smart Factory SMT", "Edge Inference", "PLC & SCADA Security", "Sensor Telemetry"]
+  },
+  {
+    title: "Professional Engineering Development",
+    summary: "International registration pathways, competency portfolios, AER, and intPE accreditation.",
+    topics: ["ASEAN Registry (AER)", "intPE Portfolio", "CPD Compliance", "Cross-Border Mobility"]
+  }
+];
+
+export const REGISTRATION_TIERS: RegistrationTier[] = [
+  {
+    id: "tier-f2f",
+    name: "Face-to-Face Attendee",
+    subtitle: "Full Day 1 In-Person Experience at Wyndham Hotel, Muscat",
+    priceOman: "OMR 35",
+    pricePhp: "PHP 5,250",
+    type: "in-person",
+    recommended: true,
+    cpdValue: "Earn 10 CPD Units when combined with Day 2 online participation",
+    features: [
+      "Full Day 1 in-person access at Wyndham Hotel Muscat",
+      "Morning Technology Talks & Professional Org sessions",
+      "Attendance to ASEAN Engineer Registry (AER) Conferment",
+      "Seat at the prestigious Anniversary Gala Night & Buffet Banquet",
+      "Official In-Person Delegate Kit, physical badge & commemorative gift",
+      "Networking breakfast, coffee breaks & luxury dinner buffet included",
+      "Qualifies for the 10-CPD Unit Hybrid Credit when attending Day 2"
+    ]
+  },
+  {
+    id: "tier-online-pro",
+    name: "Online Professional Attendee",
+    subtitle: "Day 2 Virtual Access Tailored for Working Engineers & IT Professionals",
+    priceOman: "OMR 15",
+    pricePhp: "PHP 2,250",
+    type: "online",
+    cpdValue: "Eligible for Day 2 Workshop CPD credits",
+    features: [
+      "Full Day 2 virtual access to all 3 technical workshop sessions",
+      "Live interactive Q&A with speakers in Mexico & Canada",
+      "Participation in PTC Global MENA Oman Write-Shop",
+      "Access to all 6 Full Remote Short Courses with Cisco & ICpEP Badges",
+      "Live broadcast access to intPE Conferment ceremonies",
+      "Downloadable digital workshop materials, slides & templates",
+      "Official e-Certificate of Participation"
+    ]
+  },
+  {
+    id: "tier-online-student",
+    name: "Online Student Attendee",
+    subtitle: "Special Student Rate for Aspiring Computer Engineers & Tech Majors",
+    priceOman: "OMR 8",
+    pricePhp: "PHP 1,200",
+    type: "student",
+    badge: "Student Discount",
+    cpdValue: "Student Training & Certification Hours",
+    features: [
+      "Subsidized student registration fee with valid school ID",
+      "Access to Day 2 virtual breakout workshops & live speaker panels",
+      "Full enrollment in all 6 Remote Short Courses (AI, Cyber, Linux, IoT)",
+      "Cisco Networking Academy verified completion badges",
+      "Career mentorship breakout & global engineer pathways briefing",
+      "Digital student conference kit & presentation slide deck",
+      "Official Student Certificate of Technical Attendance"
+    ]
+  }
+];
+
+export const SPEAKERS: Speaker[] = [
+  {
+    id: "spk-apag",
+    name: "Dr. Desiderio A. Apag III",
+    title: "CHED Commissioner & ICpEP National President",
+    organization: "Commission on Higher Education / ICpEP National",
+    topic: "The Future of Filipino Engineering Education & Global Excellence",
+    category: "Keynote",
+    bio: "Commissioner of the Commission on Higher Education (CHED) and National President of the Institute of Computer Engineers of the Philippines, leading the vanguard of engineering education reform, international accreditation, and professional advancement.",
+    photoUrl: spkApagImg
+  },
+  {
+    id: "spk-maglalang",
+    name: "Engr. Leopoldo Jr Maglalang",
+    title: "ICpEP-Oman President & Chair, PTC Engineers Registration Board",
+    organization: "ICpEP-Oman Chapter / PTC-ERB",
+    topic: "Pathways to Professional Engineering Registration & Leadership",
+    category: "Leadership",
+    bio: "President of ICpEP-Oman and Chairman of the PTC Engineers Registration Board, pioneering overseas credentialing pathways, ASEAN engineer conferments, and bilateral professional linkages in the GCC.",
+    photoUrl: spkMaglalangImg
+  },
+  {
+    id: "spk-albadi",
+    name: "Dr. Abdullah Al-Badi",
+    title: "Chairman, IEEE Oman Chapter",
+    organization: "IEEE Oman Section / Sultan Qaboos University",
+    topic: "Maintaining High Renewable Energy Penetration in Modern Power Grids",
+    category: "Industry",
+    bio: "Distinguished academician, power systems engineer, and Chairman of the IEEE Oman Section, leading research initiatives in grid decarbonization, renewable energy integration, and smart utility infrastructure in Oman.",
+    photoUrl: spkAlbadiImg
+  },
+  {
+    id: "spk-careon",
+    name: "Engr. Raymond Careon",
+    title: "Project Engineer",
+    organization: "ASMPT SMT Solutions – Mexico",
+    topic: "Enabling the Intelligent Factory: Hardware, Software & Smart SMT",
+    category: "Industry",
+    bio: "Senior project engineer at ASMPT SMT Solutions Mexico with extensive cross-continental expertise in surface-mount technology automation, smart manufacturing telemetry, and Industry 4.0 execution.",
+    photoUrl: spkCareonImg
+  },
+  {
+    id: "spk-hernandez",
+    name: "Engr. Reginald Norris Hernandez",
+    title: "AI Enthusiast Manager – Network Solution",
+    organization: "CDW – Canada",
+    topic: "From Strategy to Scale: Building Secure, Production-Ready AI Solutions",
+    category: "Industry",
+    bio: "Enterprise network solution architect and AI infrastructure specialist at CDW Canada, advising Fortune 500 enterprises on deploying scalable neural network clusters, high-speed fabric interconnects, and zero-trust data topologies.",
+    photoUrl: spkHernandezImg
+  },
+  {
+    id: "spk-bustamante",
+    name: "Engr. Trese Bustamante",
+    title: "Vice Chair, PTC-ERB & PTC-MENA International Affairs",
+    organization: "Philippine Technological Council (PTC)",
+    topic: "Engineering Beyond Borders: ASEAN Recognition & MENA Practice",
+    category: "Leadership",
+    bio: "Vice Chairman of the PTC Engineers Registration Board and leading architect of PTC-MENA international affairs, mentoring hundreds of ASEAN and International Professional Engineers across the Middle East.",
+    photoUrl: spkBustamanteImg
+  },
+  {
+    id: "spk-monsada",
+    name: "Engr. Federico A. Monsada",
+    title: "President",
+    organization: "Philippine Technological Council (PTC)",
+    topic: "Global Mobility and Mutual Recognition Agreements for Engineers",
+    category: "Leadership",
+    bio: "President of the Philippine Technological Council, heading the umbrella organization of professional engineering institutions and stewarding the Philippines' full signatory standing in the Washington Accord.",
+    photoUrl: spkMonsadaImg
+  },
+  {
+    id: "spk-tambaoan",
+    name: "Engr. Jonathan PG Tambaoan",
+    title: "ICpEP-Oman VP Education",
+    organization: "ICpEP-Oman Chapter",
+    topic: "Organizational Milestones & Continuous Technical Upskilling",
+    category: "Leadership",
+    bio: "Vice President for Education of ICpEP-Oman, spearheading digital learning academies, technical workshops, and CPD accreditation programs for overseas computing engineers.",
+    photoUrl: spkTambaoanImg
+  },
+  {
+    id: "spk-canlas",
+    name: "Dr. Ferdi Canlas",
+    title: "Panel Moderator & Distinguished Educator",
+    organization: "ICpEP-Oman Chapter",
+    topic: "Industry Leaders Panel: What Skills Will Engineers/IT/ComSci Need in the Next Five Years?",
+    category: "Industry",
+    bio: "Esteemed academic leader and senior technology educator serving as the moderator for the Industry Leaders Panel, facilitating strategic discourse on artificial intelligence, cloud modernization, zero-trust cybersecurity, and career competencies for future computer engineers.",
+    photoUrl: spkCanlasImg
+  },
+  {
+    id: "spk-manglicmot",
+    name: "Engr. Gerry Manglicmot",
+    title: "PTC-Presidential Adviser",
+    organization: "PTC Global MENA – Oman",
+    topic: "AER & intPE Conferment Ceremonies and Global Engineering Standards",
+    category: "Conferment",
+    bio: "Presidential Adviser for the Philippine Technological Council Global MENA – Oman, championing continuous credentialing, ASEAN Engineer registries, and welfare for Filipino engineering practitioners across the Sultanate of Oman.",
+    photoUrl: spkManglicmotImg
+  },
+  {
+    id: "spk-agatep",
+    name: "Engr. Romy R. Agatep",
+    title: "Chair, PTC Engineers Registration Board",
+    organization: "PTC-ERB",
+    topic: "Charging of the Conferees & Ethics of International Practice",
+    category: "Conferment",
+    bio: "Chairman of the PTC Engineers Registration Board (PTC-ERB), administering the formal charging of candidate engineers for both the ASEAN Engineer Registry and the International Professional Engineer register.",
+    photoUrl: spkAgatepImg
+  },
+  {
+    id: "spk-crisostomo",
+    name: "Dr. Ana Shiela Crisostomo",
+    title: "ICpEP-Oman VP Internal",
+    organization: "ICpEP-Oman Chapter",
+    topic: "Institutional Synergy, Internal Governance & Regional Computing Milestones",
+    category: "Leadership",
+    bio: "Vice President for Internal Affairs of ICpEP-Oman Chapter, guiding chapter governance, membership empowerment, institutional partnerships, and regional computer engineering events.",
+    photoUrl: spkCrisostomoImg
+  },
+  {
+    id: "spk-aer-conferees",
+    name: "ASEAN Engineer (AER) Conferees Cohort",
+    title: "AER 2026 Conferees & Fellow Engineers",
+    organization: "ASEAN Federation of Engineering Organisations (AFEO)",
+    topic: "AER Formal Investiture, Oath-Taking & Medallion Conferment",
+    category: "Conferment",
+    bio: "Honoring the 2026 cohort of distinguished Filipino computer engineers in Oman and the GCC inducted into the ASEAN Engineer Register under the auspices of AFEO and PTC-ERB.",
+    photoUrl: spkAerConfereesImg
+  },
+  {
+    id: "spk-intpe-conferees",
+    name: "International Professional Engineer (intPE) Conferees",
+    title: "intPE 2026 Candidates & Registrants",
+    organization: "International Engineering Alliance / PTC-ERB",
+    topic: "intPE Global Register Oath-Taking & Verification",
+    category: "Conferment",
+    bio: "The incoming cohort of International Professional Engineers verified through peer review and substantial equivalence under the International Engineering Alliance (IEA) Washington Accord framework.",
+    photoUrl: spkIntpeConfereesImg
+  }
+];
+
+export const VENUE_INFO = {
+  name: "Wyndham Hotel Muscat",
+  city: "Muscat, Sultanate of Oman",
+  address: "Al Khuwair, Muscat, Sultanate of Oman",
+  hall: "Grand Ballroom & Executive Conference Center (Day 1)",
+  parking: "Complimentary Valet & Self-Parking Available for Registered Attendees",
+  dressCode: {
+    day: "Business Formal / Barong Tagalog / National Dress / Corporate Attire",
+    gala: "Formal Evening Wear / Black Tie / Barong / Tuxedo / Elegant Gala Attire"
+  },
+  highlights: [
+    "Centrally located in Muscat with direct access from Sultan Qaboos Highway",
+    "High-speed fiber connectivity for live hybrid streaming",
+    "Luxury ballroom dining for the Anniversary Gala Night",
+    "Dedicated registration concourse and corporate networking lounge"
+  ]
+};

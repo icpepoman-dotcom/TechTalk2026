@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Cinzel', serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --color-navy-950: #040c1a;
+  --color-navy-900: #071326;
+  --color-navy-850: #0a1b35;
+  --color-navy-800: #0f2448;
+  --color-navy-700: #163363;
+  --color-gold-300: #fcedbe;
+  --color-gold-400: #f5d77f;
+  --color-gold-500: #e5b94c;
+  --color-gold-600: #c9982a;
+  --color-gold-700: #9e731b;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: #071326;
+  color: #f1f5f9;
+  overflow-x: hidden;
+}
+
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+/* Metallic gold text gradients */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #fcedbe 0%, #e5b94c 50%, #c9982a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold-bright {
+  background: linear-gradient(135deg, #ffffff 0%, #fcedbe 40%, #e5b94c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.border-gold-subtle {
+  border-color: rgba(229, 185, 76, 0.25);
+}
+
+.border-gold-glow {
+  border-color: rgba(229, 185, 76, 0.5);
+  box-shadow: 0 0 20px -5px rgba(229, 185, 76, 0.15);
+}
+
+/* Subtle circuit background pattern */
+.bg-circuit-pattern {
+  background-image: radial-gradient(rgba(229, 185, 76, 0.12) 1px, transparent 1px),
+                    radial-gradient(rgba(30, 64, 120, 0.25) 1px, transparent 1px);
+  background-size: 32px 32px, 16px 16px;
+  background-position: 0 0, 16px 16px;
+}

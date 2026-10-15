@@ -1,0 +1,6 @@
+{
+  "name": "ICpEP-Oman TechTalk 2026",
+  "description": "Official event website for ICpEP-Oman TechTalk 2026: Engineering the Digital Future: Technology, Innovation and Professional Excellence. Hybrid conference, Gala Night, AER & intPE Conferments, and CPD accreditation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
