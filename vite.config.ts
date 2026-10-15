@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 export default defineConfig(() => {
   return {
-    base: '/TechTalk2026/',
+    base: './TechTalk2026/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
