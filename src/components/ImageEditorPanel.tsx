@@ -21,6 +21,7 @@ import {
 import { useImageManager } from '../context/ImageContext';
 import { useEventData } from '../context/EventDataContext';
 import { compressImage } from '../utils/imageCompressor';
+import { downloadAllImagesZip } from '../utils/imagePath';
 
 export const ImageEditorPanel: React.FC = () => {
   const {
@@ -167,6 +168,17 @@ export const ImageEditorPanel: React.FC = () => {
     link.download = `icpep_techtalk_images_${new Date().toISOString().slice(0, 10)}.json`;
     link.click();
     showToast('Image package exported!');
+  };
+
+  const handleDownloadPicturesZip = async () => {
+    try {
+      showToast('Generating images ZIP archive...');
+      const { count, filename } = await downloadAllImagesZip(slots, speakers);
+      showToast(`Downloaded ${count} pictures as ${filename}!`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      showToast(`Export failed: ${msg}`);
+    }
   };
 
   const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -795,7 +807,17 @@ export const ImageEditorPanel: React.FC = () => {
 
           {/* Backup & Restore Tools */}
           <div className="pt-3 border-t border-[#e5b94c]/20 flex flex-wrap items-center justify-between gap-3 text-xs">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={handleDownloadPicturesZip}
+                className="px-3 py-1.5 bg-gradient-to-r from-[#163363] to-[#0f2448] text-[#fcedbe] hover:brightness-110 rounded border border-[#e5b94c]/60 flex items-center gap-1.5 cursor-pointer font-medium shadow-sm"
+                title="Download all active custom pictures as a ZIP to put into public/images/ for GitHub deployment"
+              >
+                <Download className="w-3.5 h-3.5 text-[#e5b94c]" />
+                <span>Download Pictures ZIP (for images/ folder)</span>
+              </button>
+
               <button
                 type="button"
                 onClick={handleExport}

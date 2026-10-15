@@ -1,18 +1,21 @@
 import { DaySchedule, Speaker, ShortCourse, RegistrationTier, CollaboratingOrg } from '../types';
-import spkApagImg from '../assets/images/speaker_dr_apag_1791926653953.jpg';
-import spkMaglalangImg from '../assets/images/speaker_engr_maglalang_1791926654720.jpg';
-import spkAlbadiImg from '../assets/images/speaker_dr_albadi_1791926655546.jpg';
-import spkCareonImg from '../assets/images/speaker_careon_tech_1791926655896.jpg';
-import spkHernandezImg from '../assets/images/speaker_hernandez_ai_1791926656006.jpg';
-import spkBustamanteImg from '../assets/images/speaker_engr_bustamante_1791927625251.jpg';
-import spkMonsadaImg from '../assets/images/speaker_engr_monsada_1791927625971.jpg';
-import spkTambaoanImg from '../assets/images/speaker_engr_tambaoan_1791927626145.jpg';
-import spkCanlasImg from '../assets/images/speaker_dr_canlas_1791927626152.jpg';
-import spkManglicmotImg from '../assets/images/speaker_engr_manglicmot_1791927626406.jpg';
+import spkApagImg from '../assets/images/speaker_dr_apag_updated.png';
+import spkMaglalangImg from '../assets/images/speaker_engr_maglalang_updated.jpg';
+import spkAlbadiImg from '../assets/images/speaker_dr_albadi_updated.png';
+import spkCareonImg from '../assets/images/speaker_careon_tech_updated.webp';
+import spkHernandezImg from '../assets/images/speaker_hernandez_ai_updated.jpg';
+import spkBustamanteImg from '../assets/images/speaker_engr_bustamante_updated.png';
+import spkMonsadaImg from '../assets/images/speaker_engr_monsada_updated.png';
+import spkTambaoanImg from '../assets/images/speaker_engr_tambaoan_updated.png';
+import spkCanlasImg from '../assets/images/speaker_dr_canlas_updated.png';
+import spkManglicmotImg from '../assets/images/speaker_engr_manglicmot_updated.png';
 import spkAgatepImg from '../assets/images/speaker_engr_agatep_1791927651523.jpg';
-import spkCrisostomoImg from '../assets/images/speaker_dr_crisostomo_1791927652140.jpg';
+import spkCrisostomoImg from '../assets/images/speaker_dr_crisostomo_updated.png';
 import spkAerConfereesImg from '../assets/images/speaker_aer_conferees_1791927650929.jpg';
 import spkIntpeConfereesImg from '../assets/images/speaker_intpe_conferees_1791927652021.jpg';
+import spkYeongImg from '../assets/images/speaker_ts_yeong_chin_chow.png';
+import spkAlAlawiImg from '../assets/images/speaker_dr_ali_al_alawi.webp';
+import qrCodeRegistrationImg from '../assets/images/qr_code_registration.webp';
 
 export const EVENT_DETAILS = {
   name: "ICpEP-Oman TechTalk 2026",
@@ -29,7 +32,7 @@ export const EVENT_DETAILS = {
   contactEmail: "icpep.oman@gmail.com",
   globalRegistrationUrl: "",
   useCustomRegistrationRedirect: false,
-  qrCodeCustomUrl: "",
+  qrCodeCustomUrl: qrCodeRegistrationImg,
   qrCodeTargetUrl: "",
   qrCodeType: "auto" as "auto" | "custom_image",
   qrCodeCenterLogo: true,
@@ -962,6 +965,26 @@ export const SPEAKERS: Speaker[] = [
     category: "Conferment",
     bio: "The incoming cohort of International Professional Engineers verified through peer review and substantial equivalence under the International Engineering Alliance (IEA) Washington Accord framework.",
     photoUrl: spkIntpeConfereesImg
+  },
+  {
+    id: "spk-1791926121607",
+    name: "Ts. Yeong Chin Chow",
+    title: "Head Commissioner, ASEAN Engineering Register",
+    organization: "ASEAN Engineering Register",
+    topic: "Keynote Topic Title",
+    category: "Leadership",
+    bio: "Professional Engineer certified to practise in Civil Engineering by the Board of Engineers Malaysia (Reg. No.: C111351), International Professional Engineer (IntPE), ASEAN Chartered Professional Engineer (ACPE).",
+    photoUrl: spkYeongImg
+  },
+  {
+    id: "spk-1792011173758",
+    name: "Dr.Ali  Humaid Mohammed Al Alawi",
+    title: "Board Chairman",
+    organization: "Grand Institute for Practical Application",
+    topic: "Concluding Remarks",
+    category: "Leadership",
+    bio: "AI Expert and Chairman of the board of GIPA.",
+    photoUrl: spkAlAlawiImg
   }
 ];
 

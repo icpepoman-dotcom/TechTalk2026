@@ -3,6 +3,7 @@ import { User, Award, Globe, Mic, Building2, Camera } from 'lucide-react';
 import { Speaker } from '../types';
 import { useImageManager } from '../context/ImageContext';
 import { useEventData } from '../context/EventDataContext';
+import { resolveImageUrl } from '../utils/imagePath';
 
 export const SpeakersSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -57,7 +58,7 @@ export const SpeakersSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {filteredSpeakers.map((speaker) => {
             const slotId = speaker.id.replace(/-/g, '_');
-            const speakerPhoto = getImageUrl(slotId) || speaker.photoUrl;
+            const speakerPhoto = resolveImageUrl(getImageUrl(slotId) || speaker.photoUrl);
             const speakerStyles = getImageStyle(slotId);
 
             return (
@@ -172,7 +173,7 @@ export const SpeakersSection: React.FC = () => {
                 <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-[#0f2448] border-2 border-[#e5b94c] flex items-center justify-center text-[#fcedbe] overflow-hidden shrink-0 shadow-lg">
                   {(getImageUrl(activeSpeaker.id.replace(/-/g, '_')) || activeSpeaker.photoUrl) ? (
                     <img
-                      src={getImageUrl(activeSpeaker.id.replace(/-/g, '_')) || activeSpeaker.photoUrl}
+                      src={resolveImageUrl(getImageUrl(activeSpeaker.id.replace(/-/g, '_')) || activeSpeaker.photoUrl)}
                       alt={activeSpeaker.name}
                       style={getImageStyle(activeSpeaker.id.replace(/-/g, '_'))}
                       className="w-full h-full object-cover"

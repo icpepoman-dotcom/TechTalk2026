@@ -22,6 +22,7 @@ import QRCode from 'qrcode';
 import { useEventData } from '../context/EventDataContext';
 import { useImageManager } from '../context/ImageContext';
 import { compressImage } from '../utils/imageCompressor';
+import { resolveImageUrl } from '../utils/imagePath';
 
 interface ScanToRegisterModalProps {
   isOpen: boolean;
@@ -83,7 +84,7 @@ export const ScanToRegisterModal: React.FC<ScanToRegisterModalProps> = ({
   // Determine active QR display
   const customImageFromSlot = slots.qr_code?.customUrl;
   const customImageFromDetails = eventDetails.qrCodeCustomUrl;
-  const activeCustomImage = customImageFromSlot || customImageFromDetails;
+  const activeCustomImage = resolveImageUrl(customImageFromSlot || customImageFromDetails);
 
   const isCustomImageMode = (eventDetails.qrCodeType === 'custom_image' || (!eventDetails.qrCodeType && !!activeCustomImage)) && !!activeCustomImage;
 

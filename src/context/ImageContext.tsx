@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useEventData } from './EventDataContext';
 import { dbSetItem, dbGetItem, dbRemoveItem } from '../utils/storageDb';
 import { compressImage } from '../utils/imageCompressor';
+import { resolveImageUrl, syncImageToDisk } from '../utils/imagePath';
 
 // Default asset paths
 import defaultHeroImg from '../assets/images/hero_tech_engineer_muscat_1790851939093.jpg';
@@ -475,9 +476,16 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setIsIndexedDbReady(true);
     });
 
-    // 2. Fetch server stored images for public visitor synchronization
+    // 2. Fetch server stored images for public visitor synchronization if on server backend
     fetch('/api/site-data')
-      .then((res) => (res.ok ? res.json() : null))
+      .then((res) => {
+        if (!res.ok) return null;
+        const contentType = res.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          return res.json();
+        }
+        return null;
+      })
       .then((serverRes) => {
         if (!active || !serverRes || !serverRes.saved || !serverRes.data?.customImages) return;
         const srvImages = serverRes.data.customImages;
@@ -615,7 +623,7 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const getImageUrl = (slotId: string): string => {
     const slot = slots[slotId];
     if (!slot) return '';
-    return slot.customUrl || slot.defaultUrl;
+    return resolveImageUrl(slot.customUrl || slot.defaultUrl);
   };
 
   const hasCustomImage = (slotId: string): boolean => {
@@ -663,6 +671,12 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
       };
     });
+
+    // Auto-sync image to server disk (src/assets/images and public/images)
+    if (url && url.startsWith('data:image/')) {
+      const slotName = slots[slotId]?.name || slotId;
+      syncImageToDisk(slotId, slotName, url).catch(() => {});
+    }
 
     // Auto-compress large data URLs in background to keep storage light and fast
     if (url && url.startsWith('data:image/') && url.length > 100000 && typeof window !== 'undefined') {

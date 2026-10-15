@@ -6,7 +6,7 @@ import { useEventData } from '../context/EventDataContext';
 export const VenueSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'venue' | 'dresscode' | 'travel'>('venue');
   const { getImageUrl, getImageStyle, openEditor } = useImageManager();
-  const { venueInfo } = useEventData();
+  const { venueInfo, isPublishMode } = useEventData();
 
   const venueImageSrc = getImageUrl('venue');
   const venueImageStyles = getImageStyle('venue');
@@ -32,15 +32,17 @@ export const VenueSection: React.FC = () => {
           {/* Left Column: Venue Image & Fast Facts */}
           <div className="lg:col-span-6 space-y-4">
             <div className="group relative rounded-2xl overflow-hidden border-2 border-[#e5b94c]/40 shadow-2xl bg-[#0a1b35] aspect-[16/10]">
-              {/* Quick Edit Overlay Button */}
-              <button
-                onClick={() => openEditor('venue')}
-                className="absolute top-3 left-3 z-20 px-2.5 py-1 text-xs font-semibold text-[#071326] bg-[#fcedbe] hover:bg-[#e5b94c] rounded shadow-md opacity-90 hover:opacity-100 flex items-center gap-1.5 transition-all cursor-pointer"
-                title="Edit Venue Photo"
-              >
-                <Sliders className="w-3.5 h-3.5 text-[#071326]" />
-                <span>Edit Photo</span>
-              </button>
+              {/* Quick Edit Overlay Button: Only visible when admin is logged in and not in publish mode */}
+              {!isPublishMode && (
+                <button
+                  onClick={() => openEditor('venue')}
+                  className="absolute top-3 left-3 z-20 px-2.5 py-1 text-xs font-semibold text-[#071326] bg-[#fcedbe] hover:bg-[#e5b94c] rounded shadow-md opacity-90 hover:opacity-100 flex items-center gap-1.5 transition-all cursor-pointer"
+                  title="Edit Venue Photo"
+                >
+                  <Sliders className="w-3.5 h-3.5 text-[#071326]" />
+                  <span>Edit Photo</span>
+                </button>
+              )}
 
               <img
                 src={venueImageSrc}

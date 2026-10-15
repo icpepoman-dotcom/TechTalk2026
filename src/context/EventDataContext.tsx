@@ -320,9 +320,16 @@ export const EventDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
     }).catch(() => {});
 
-    // 3. Server Check: Load live updates saved to server so all visitors on dev and preview see them
+    // 3. Server Check: Load live updates saved to server if running with server backend
     fetch('/api/site-data')
-      .then((res) => (res.ok ? res.json() : null))
+      .then((res) => {
+        if (!res.ok) return null;
+        const contentType = res.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          return res.json();
+        }
+        return null;
+      })
       .then((serverRes) => {
         if (!active || !serverRes || !serverRes.saved || !serverRes.data) return;
         applyParsedData(serverRes.data);
