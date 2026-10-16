@@ -8,20 +8,27 @@ import { resolveImageUrl, syncImageToDisk } from '../utils/imagePath';
 import defaultHeroImg from '../assets/images/hero_tech_engineer_muscat_1790851939093.jpg';
 import defaultVenueImg from '../assets/images/venue_wyndham_muscat_1790851970416.jpg';
 import defaultGalaImg from '../assets/images/anniversary_gala_hall_1790852620720.jpg';
-import defaultSpkApag from '../assets/images/speaker_dr_apag_1791926653953.jpg';
-import defaultSpkMaglalang from '../assets/images/speaker_engr_maglalang_1791926654720.jpg';
-import defaultSpkAlbadi from '../assets/images/speaker_dr_albadi_1791926655546.jpg';
-import defaultSpkCareon from '../assets/images/speaker_careon_tech_1791926655896.jpg';
-import defaultSpkHernandez from '../assets/images/speaker_hernandez_ai_1791926656006.jpg';
-import defaultSpkBustamante from '../assets/images/speaker_engr_bustamante_1791927625251.jpg';
-import defaultSpkMonsada from '../assets/images/speaker_engr_monsada_1791927625971.jpg';
-import defaultSpkTambaoan from '../assets/images/speaker_engr_tambaoan_1791927626145.jpg';
-import defaultSpkCanlas from '../assets/images/speaker_dr_canlas_1791927626152.jpg';
-import defaultSpkManglicmot from '../assets/images/speaker_engr_manglicmot_1791927626406.jpg';
+import defaultSpkApag from '../assets/images/speaker_dr_apag_updated.png';
+import defaultSpkMaglalang from '../assets/images/speaker_engr_maglalang_updated.jpg';
+import defaultSpkAlbadi from '../assets/images/speaker_dr_albadi_updated.png';
+import defaultSpkCareon from '../assets/images/speaker_careon_tech_updated.webp';
+import defaultSpkHernandez from '../assets/images/speaker_hernandez_ai_updated.jpg';
+import defaultSpkBustamante from '../assets/images/speaker_engr_bustamante_updated.png';
+import defaultSpkMonsada from '../assets/images/speaker_engr_monsada_updated.png';
+import defaultSpkTambaoan from '../assets/images/speaker_engr_tambaoan_updated.png';
+import defaultSpkCanlas from '../assets/images/speaker_dr_canlas_updated.png';
+import defaultSpkManglicmot from '../assets/images/speaker_engr_manglicmot_updated.png';
 import defaultSpkAgatep from '../assets/images/speaker_engr_agatep_1791927651523.jpg';
 import defaultSpkAerConferees from '../assets/images/speaker_aer_conferees_1791927650929.jpg';
 import defaultSpkIntpeConferees from '../assets/images/speaker_intpe_conferees_1791927652021.jpg';
-import defaultSpkCrisostomo from '../assets/images/speaker_dr_crisostomo_1791927652140.jpg';
+import defaultSpkCrisostomo from '../assets/images/speaker_dr_crisostomo_updated.png';
+import defaultSpkYeong from '../assets/images/speaker_ts_yeong_chin_chow.png';
+import defaultSpkAlAlawi from '../assets/images/speaker_dr_ali_al_alawi.webp';
+import defaultQrCodeImg from '../assets/images/qr_code_registration.webp';
+import defaultPartnerPtc from '../assets/images/partner_ptc_updated.png';
+import defaultPartnerUtas from '../assets/images/partner_utas_updated.png';
+import defaultPartnerIeee from '../assets/images/partner_ieee_updated.png';
+import defaultPartnerCisco from '../assets/images/partner_cisco_updated.png';
 
 export interface ImageAdjustments {
   brightness: number; // 50 to 150 (default 100)
@@ -99,7 +106,7 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
     id: 'qr_code',
     name: 'Event Registration QR Code',
     category: 'banners',
-    defaultUrl: '',
+    defaultUrl: defaultQrCodeImg,
     aspectRatio: '1:1',
     description: 'Instant mobile registration QR code. Replace with custom image (PNG/JPG/SVG) or customize target link.',
     adjustments: { ...DEFAULT_ADJUSTMENTS, objectFit: 'contain' },
@@ -290,12 +297,53 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
     ]
   },
 
+  spk_yeong: {
+    id: 'spk_yeong',
+    name: 'Ts. Yeong Chin Chow',
+    category: 'speakers',
+    defaultUrl: defaultSpkYeong,
+    aspectRatio: '1:1',
+    description: 'Head Commissioner, ASEAN Engineering Register.',
+    adjustments: { ...DEFAULT_ADJUSTMENTS },
+    presets: [{ name: 'Ts. Yeong Chin Chow Official', url: defaultSpkYeong }]
+  },
+  spk_1791926121607: {
+    id: 'spk_1791926121607',
+    name: 'Ts. Yeong Chin Chow',
+    category: 'speakers',
+    defaultUrl: defaultSpkYeong,
+    aspectRatio: '1:1',
+    description: 'Head Commissioner, ASEAN Engineering Register.',
+    adjustments: { ...DEFAULT_ADJUSTMENTS },
+    presets: [{ name: 'Ts. Yeong Chin Chow Official', url: defaultSpkYeong }]
+  },
+  spk_al_alawi: {
+    id: 'spk_al_alawi',
+    name: 'Dr. Ali Humaid Mohammed Al Alawi',
+    category: 'speakers',
+    defaultUrl: defaultSpkAlAlawi,
+    aspectRatio: '1:1',
+    description: 'Board Chairman, Grand Institute for Practical Application (GIPA).',
+    adjustments: { ...DEFAULT_ADJUSTMENTS },
+    presets: [{ name: 'Dr. Ali Al Alawi Official', url: defaultSpkAlAlawi }]
+  },
+  spk_1792011173758: {
+    id: 'spk_1792011173758',
+    name: 'Dr. Ali Humaid Mohammed Al Alawi',
+    category: 'speakers',
+    defaultUrl: defaultSpkAlAlawi,
+    aspectRatio: '1:1',
+    description: 'Board Chairman, Grand Institute for Practical Application (GIPA).',
+    adjustments: { ...DEFAULT_ADJUSTMENTS },
+    presets: [{ name: 'Dr. Ali Al Alawi Official', url: defaultSpkAlAlawi }]
+  },
+
   // Partners
   partner_ptc: {
     id: 'partner_ptc',
     name: 'PTC MENA Council Emblem',
     category: 'partners',
-    defaultUrl: '',
+    defaultUrl: defaultPartnerPtc,
     aspectRatio: '1:1',
     description: 'Philippine Technological Council MENA logo emblem.',
     adjustments: { ...DEFAULT_ADJUSTMENTS }
@@ -304,7 +352,7 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
     id: 'partner_utas',
     name: 'UTAS Oman Insignia',
     category: 'partners',
-    defaultUrl: '',
+    defaultUrl: defaultPartnerUtas,
     aspectRatio: '1:1',
     description: 'University of Technology and Applied Sciences Oman emblem.',
     adjustments: { ...DEFAULT_ADJUSTMENTS }
@@ -313,7 +361,7 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
     id: 'partner_ieee',
     name: 'IEEE Oman Section Logo',
     category: 'partners',
-    defaultUrl: '',
+    defaultUrl: defaultPartnerIeee,
     aspectRatio: '1:1',
     description: 'IEEE Oman Section official badge.',
     adjustments: { ...DEFAULT_ADJUSTMENTS }
@@ -322,7 +370,7 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
     id: 'partner_cisco',
     name: 'Cisco Networking Academy Seal',
     category: 'partners',
-    defaultUrl: '',
+    defaultUrl: defaultPartnerCisco,
     aspectRatio: '1:1',
     description: 'Cisco Networking Academy verified partner emblem.',
     adjustments: { ...DEFAULT_ADJUSTMENTS }
@@ -364,7 +412,21 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const merged: Record<string, ImageSlot> = { ...DEFAULT_IMAGE_SLOTS };
         for (const [key, savedVal] of Object.entries(parsed as Record<string, any>)) {
           if (DEFAULT_IMAGE_SLOTS[key]) {
+            const isLegacyOldHash = typeof savedVal.customUrl === 'string' && (
+              savedVal.customUrl.includes('1791926653953') ||
+              savedVal.customUrl.includes('1791926654720') ||
+              savedVal.customUrl.includes('1791926655546') ||
+              savedVal.customUrl.includes('1791926655896') ||
+              savedVal.customUrl.includes('1791926656006') ||
+              savedVal.customUrl.includes('1791927625251') ||
+              savedVal.customUrl.includes('1791927625971') ||
+              savedVal.customUrl.includes('1791927626145') ||
+              savedVal.customUrl.includes('1791927626152') ||
+              savedVal.customUrl.includes('1791927626406') ||
+              savedVal.customUrl.includes('1791927652140')
+            );
             const isOutdatedFallback =
+              isLegacyOldHash ||
               (savedVal.customUrl === defaultSpkMaglalang && key !== 'spk_maglalang') ||
               (savedVal.customUrl === defaultSpkApag && key !== 'spk_apag') ||
               (savedVal.customUrl === defaultSpkCareon && key !== 'spk_careon') ||
@@ -431,8 +493,22 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           const current = merged[key] || DEFAULT_IMAGE_SLOTS[key];
 
           if (current) {
+            const isLegacyOldHash = typeof savedVal.customUrl === 'string' && (
+              savedVal.customUrl.includes('1791926653953') ||
+              savedVal.customUrl.includes('1791926654720') ||
+              savedVal.customUrl.includes('1791926655546') ||
+              savedVal.customUrl.includes('1791926655896') ||
+              savedVal.customUrl.includes('1791926656006') ||
+              savedVal.customUrl.includes('1791927625251') ||
+              savedVal.customUrl.includes('1791927625971') ||
+              savedVal.customUrl.includes('1791927626145') ||
+              savedVal.customUrl.includes('1791927626152') ||
+              savedVal.customUrl.includes('1791927626406') ||
+              savedVal.customUrl.includes('1791927652140')
+            );
+            const validCustomUrl = isLegacyOldHash ? undefined : savedVal.customUrl;
             // Check if savedVal has a customUrl or adjustments not yet reflected in current
-            const customUrlChanged = savedVal.customUrl && savedVal.customUrl !== current.customUrl;
+            const customUrlChanged = validCustomUrl && validCustomUrl !== current.customUrl;
             const adjustmentsChanged =
               savedVal.adjustments &&
               JSON.stringify(savedVal.adjustments) !== JSON.stringify(current.adjustments);
@@ -440,7 +516,7 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             if (customUrlChanged || adjustmentsChanged) {
               merged[key] = {
                 ...current,
-                customUrl: savedVal.customUrl || current.customUrl,
+                customUrl: validCustomUrl || current.customUrl,
                 adjustments: savedVal.adjustments
                   ? { ...current.adjustments, ...savedVal.adjustments }
                   : current.adjustments,

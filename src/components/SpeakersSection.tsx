@@ -82,6 +82,11 @@ export const SpeakersSection: React.FC = () => {
                             style={speakerStyles}
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                             referrerPolicy="no-referrer"
+                            onError={(e) => {
+                              if (speaker.photoUrl && e.currentTarget.src !== speaker.photoUrl) {
+                                e.currentTarget.src = speaker.photoUrl;
+                              }
+                            }}
                           />
                         ) : (
                           <User className="w-10 h-10 text-[#e5b94c]/70" />
@@ -178,6 +183,11 @@ export const SpeakersSection: React.FC = () => {
                       style={getImageStyle(activeSpeaker.id.replace(/-/g, '_'))}
                       className="w-full h-full object-cover"
                       referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        if (activeSpeaker.photoUrl && e.currentTarget.src !== activeSpeaker.photoUrl) {
+                          e.currentTarget.src = activeSpeaker.photoUrl;
+                        }
+                      }}
                     />
                   ) : (
                     <User className="w-12 h-12 text-[#e5b94c]" />
