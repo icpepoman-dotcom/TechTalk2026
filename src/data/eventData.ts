@@ -24,7 +24,7 @@ const savedDetails = rawSite.eventDetails || {};
 export const EVENT_DETAILS = {
   name: savedDetails.name || "ICpEP-Oman TechTalk 2026",
   chapter: savedDetails.chapter || "Institute of Computer Engineers of the Philippines  Inc.—  Oman Chapter in Partnership with Grand Institute for Practical Application",
-  theme: savedDetails.theme || "Engineering the Digital Future: Technology, Innovation and Professional Excellence.",
+  theme: savedDetails.theme || "Engineering the Digital Future: Technology, Innovation, and Professional Excellence",
   tagline: savedDetails.tagline || "Connect. Learn. Innovate. Celebrate.",
   subheading: savedDetails.subheading || "Empowering Engineers and Computing Professionals through Technology and Global Certification.",
   datesSummary: savedDetails.datesSummary || "October 30 – 31, 2026",
