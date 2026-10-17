@@ -247,7 +247,7 @@ export const EventDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                     ...it,
                     speakers: [
                       {
-                        name: "Dr. Ferdi Canlas",
+                        name: "Dr. Ferddie Q. Canlas",
                         role: "Panel Moderator",
                         organization: "ICpEP-Oman TechTalk 2026"
                       }

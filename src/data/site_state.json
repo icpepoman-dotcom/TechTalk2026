@@ -1,6 +1,6 @@
 {
   "version": "icpep-techtalk-2026-v2",
-  "savedAt": "2026-10-17T10:25:20.018Z",
+  "savedAt": "2026-10-17T17:42:22.619Z",
   "eventDetails": {
     "name": "ICpEP-Oman TechTalk 2026",
     "chapter": "Institute of Computer Engineers of the Philippines  Inc.—  Oman Chapter in Partnership with Grand Institute for Practical Application",
@@ -14,7 +14,7 @@
     "slotsRemaining": 100,
     "totalCapacity": 350,
     "contactEmail": "icpep.oman@gmail.com",
-    "globalRegistrationUrl": "https://forms.gle/zbrtdAQVG5KsyoHB9",
+    "globalRegistrationUrl": "https://forms.gle/PHm6nsGDaWURD4Fu9",
     "useCustomRegistrationRedirect": true,
     "qrCodeCustomUrl": "./images/qr_code_registration.webp",
     "qrCodeTargetUrl": "https://forms.gle/kE851fnuukmbQZws8",
@@ -321,7 +321,7 @@
               "description": "High-level interactive panel examining AI orchestration, cloud computing, cybersecurity, and global professional licensing.",
               "speakers": [
                 {
-                  "name": "Dr. Ferdi Canlas",
+                  "name": "Dr. Ferddie Q. Canlas",
                   "role": "Panel Moderator",
                   "organization": "ICpEP-Oman TechTalk 2026"
                 }
@@ -766,7 +766,8 @@
       "description": "Foundational AI architectures, large language models, prompt engineering, generative tooling, and production safety guidelines.",
       "duration": "Self-Paced (approx. 6 hrs)",
       "competency": "AI & Machine Learning",
-      "partner": "ICpEP Classroom & Industry Partners"
+      "partner": "ICpEP Classroom & Industry Partners",
+      "enrollmentUrl": "https://www.netacad.com/courses/introduction-to-modern-ai?courseLang=en-US&instance_id=4c19f33f-c733-4d55-8d45-bd9e2018a196"
     },
     {
       "id": "sc-2",
@@ -775,7 +776,8 @@
       "description": "Defensive perimeter fundamentals, zero-trust hygiene, malware classification, threat hunting, and compliance standards.",
       "duration": "Self-Paced (approx. 8 hrs)",
       "competency": "Information Security",
-      "partner": "Cisco Networking Academy"
+      "partner": "Cisco Networking Academy",
+      "enrollmentUrl": "https://www.netacad.com/courses/introduction-to-cybersecurity?courseLang=en-US&instance_id=407f94a4-abf0-4c4e-bfcf-d078006b34a8"
     },
     {
       "id": "sc-3",
@@ -784,7 +786,8 @@
       "description": "Sensor networks, microcontroller telemetry, MQTT protocols, cloud edge processing, and industrial IoT architecture.",
       "duration": "Self-Paced (approx. 6 hrs)",
       "competency": "Smart Systems & Edge",
-      "partner": "Cisco Networking Academy"
+      "partner": "Cisco Networking Academy",
+      "enrollmentUrl": "https://www.netacad.com/courses/introduction-iot?courseLang=en-US&instance_id=cd4eeaf3-3828-47b7-8504-3a192543c9b5"
     },
     {
       "id": "sc-4",
@@ -793,7 +796,8 @@
       "description": "Exploratory data analysis, statistical methods, Python data pipelines, visualization frameworks, and predictive modeling.",
       "duration": "Self-Paced (approx. 8 hrs)",
       "competency": "Analytics & Applied Math",
-      "partner": "Cisco Networking Academy"
+      "partner": "Cisco Networking Academy",
+      "enrollmentUrl": "https://www.netacad.com/courses/introduction-data-science?courseLang=en-US&instance_id=58df83f2-d402-4d5d-8692-3ae7ccffc2b8"
     },
     {
       "id": "sc-5",
@@ -802,7 +806,8 @@
       "description": "Command-line mastery, shell scripting, package management, POSIX permissions, and foundational administration for cloud engineers.",
       "duration": "Self-Paced (approx. 5 hrs)",
       "competency": "Systems & Infrastructure",
-      "partner": "Cisco Networking Academy"
+      "partner": "Cisco Networking Academy",
+      "enrollmentUrl": "https://www.netacad.com/courses/linux-unhatched?courseLang=en-US&instance_id=9b2192e7-7ef8-4af9-855d-d95107a65bd6"
     },
     {
       "id": "sc-6",
@@ -811,7 +816,8 @@
       "description": "Executive technical writing, structured engineering proposals, executive summaries, data storytelling, and stakeholder presentation.",
       "duration": "Self-Paced (approx. 4 hrs)",
       "competency": "Professional Communication",
-      "partner": "ICpEP Professional Development"
+      "partner": "ICpEP Professional Development",
+      "enrollmentUrl": "https://www.netacad.com/courses/compelling-reports?courseLang=en-US&instance_id=661f38b5-50fc-4bf2-a5ad-59216442b239"
     }
   ],
   "workshopTracks": [
@@ -906,7 +912,7 @@
         "Official e-Certificate of Participation"
       ],
       "redirectUrl": "https://forms.gle/zbrtdAQVG5KsyoHB9",
-      "useRedirect": false
+      "useRedirect": true
     },
     {
       "id": "tier-online-student",
@@ -927,7 +933,7 @@
         "Official Student Certificate of Technical Attendance"
       ],
       "redirectUrl": "https://forms.gle/zbrtdAQVG5KsyoHB9",
-      "useRedirect": false
+      "useRedirect": true
     }
   ],
   "speakers": [
@@ -1013,7 +1019,7 @@
     },
     {
       "id": "spk-canlas",
-      "name": "Dr. Ferdi Canlas",
+      "name": "Dr. Ferddie Q. Canlas",
       "title": "Panel Moderator & Distinguished Educator",
       "organization": "ICpEP-Oman Chapter",
       "topic": "Industry Leaders Panel: What Skills Will Engineers/IT/ComSci Need in the Next Five Years?",
@@ -1039,11 +1045,11 @@
       "topic": "Charging of the Conferees & Ethics of International Practice",
       "category": "Conferment",
       "bio": "Chairman of the PTC Engineers Registration Board (PTC-ERB), administering the formal charging of candidate engineers for both the ASEAN Engineer Registry and the International Professional Engineer register.",
-      "photoUrl": "./images/speaker_engr_agatep_1791927651523.jpg"
+      "photoUrl": "./images/speaker_engr__romy_r__agatep.webp"
     },
     {
       "id": "spk-crisostomo",
-      "name": "Dr. Ana Shiela Crisostomo",
+      "name": "Dr. Anna Sheila  I. Crisostomo",
       "title": "ICpEP-Oman VP Internal",
       "organization": "ICpEP-Oman Chapter",
       "topic": "Institutional Synergy, Internal Governance & Regional Computing Milestones",
@@ -1108,5 +1114,364 @@
       "Luxury ballroom dining for the Anniversary Gala Night",
       "Dedicated registration concourse and corporate networking lounge"
     ]
+  },
+  "attendees": [
+    {
+      "id": "ICPEP-2026-881923",
+      "fullName": "Engr. Marco Villanueva",
+      "email": "mvillanueva@gmail.com",
+      "phone": "+968 9452 1198",
+      "affiliation": "Petroleum Development Oman (PDO)",
+      "prcLicenseNo": "0084729",
+      "tierId": "tier-f2f",
+      "isHybridBundle": true,
+      "selectedWorkshopTrack": "Artificial Intelligence & Generative AI",
+      "selectedShortCourse": "Introduction to Modern Artificial Intelligence",
+      "dietaryRestrictions": "Standard Buffet",
+      "timestamp": "2026-09-28T10:15:00.000Z"
+    },
+    {
+      "id": "ICPEP-2026-442819",
+      "fullName": "Maria Santos",
+      "email": "msantos@student.utas.edu.om",
+      "phone": "+968 9123 7741",
+      "affiliation": "University of Technology and Applied Sciences",
+      "prcLicenseNo": "N/A (Student)",
+      "tierId": "tier-online-student",
+      "isHybridBundle": false,
+      "selectedWorkshopTrack": "Cybersecurity Essentials",
+      "selectedShortCourse": "Introduction to Cybersecurity",
+      "timestamp": "2026-09-29T14:30:00.000Z"
+    }
+  ],
+  "customImages": {
+    "qr_code": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "contain"
+      },
+      "name": "Event Registration QR Code",
+      "description": "Instant mobile registration QR code. Replace with custom image (PNG/JPG/SVG) or customize target link."
+    },
+    "spk_apag": {
+      "customUrl": "./images/speaker_dr_apag_updated.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Dr. Desiderio A. Apag III",
+      "description": "CHED Commissioner & ICpEP National President. Keynote Speaker."
+    },
+    "spk_maglalang": {
+      "customUrl": "./images/speaker_engr_maglalang_updated.jpg",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Engr. Leopoldo Maglalang Jr.",
+      "description": "ICpEP-Oman President & Chair, PTC Engineers Registration Board."
+    },
+    "spk_albadi": {
+      "customUrl": "./images/speaker_dr_albadi_updated.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Dr. Abdullah Al-Badi",
+      "description": "Chairman, IEEE Oman Chapter. Keynote on High Renewable Energy Power Grids."
+    },
+    "spk_careon": {
+      "customUrl": "./images/speaker_careon_tech_updated.webp",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Engr. Raymond Careon",
+      "description": "Project Engineer, ASMPT SMT Solutions (Mexico). Intelligent Factory Speaker."
+    },
+    "spk_hernandez": {
+      "customUrl": "./images/speaker_hernandez_ai_updated.jpg",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Engr. Reginald Norris Hernandez",
+      "description": "AI Solution Manager, CDW (Canada). Enterprise AI & Network Strategy Speaker."
+    },
+    "spk_bustamante": {
+      "customUrl": "./images/speaker_engr_bustamante_updated.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Engr. Trese Bustamante",
+      "description": "Vice Chair, PTC-ERB & PTC-MENA International Affairs. AER Mentorship."
+    },
+    "spk_monsada": {
+      "customUrl": "./images/speaker_engr_monsada_updated.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Engr. Federico A. Monsada",
+      "description": "President, Philippine Technological Council (PTC)."
+    },
+    "spk_tambaoan": {
+      "customUrl": "./images/speaker_engr_tambaoan_updated.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Engr. Jonathan PG Tambaoan",
+      "description": "VP Education, ICpEP-Oman Chapter. TechTalk Workshops & Academy Lead."
+    },
+    "spk_canlas": {
+      "customUrl": "./images/speaker_dr_canlas_updated.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Dr. Ferddie Q. Canlas",
+      "description": "Panel Moderator & Senior Technology Educator. Industry Leaders Panel."
+    },
+    "spk_manglicmot": {
+      "customUrl": "./images/speaker_engr_manglicmot_updated.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Engr. Gerry Manglicmot",
+      "description": "PTC-Presidential Adviser, PTC Global MENA – Oman. AER & intPE Conferment Dignitary."
+    },
+    "spk_agatep": {
+      "customUrl": "./images/speaker_engr__romy_r__agatep.webp",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Engr. Romy R. Agatep",
+      "description": "Chair, PTC Engineers Registration Board (PTC-ERB). Conferment Charging Officer."
+    },
+    "spk_crisostomo": {
+      "customUrl": "./images/speaker_dr_crisostomo_updated.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Dr. Anna Shiela I. Crisostomo",
+      "description": "VP Internal, ICpEP-Oman Chapter. Institutional Synergy & Governance."
+    },
+    "spk_aer_conferees": {
+      "customUrl": "./images/speaker_aer_conferees_1791927650929.jpg",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "ASEAN Engineer (AER) Conferees Cohort",
+      "description": "Batch 2026 ASEAN Engineer Registry conferees and investiture honorees."
+    },
+    "spk_intpe_conferees": {
+      "customUrl": "./images/speaker_intpe_conferees_1791927652021.jpg",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "International Professional Engineer (intPE) Conferees",
+      "description": "Batch 2026 International Professional Engineer (intPE) register inductees."
+    },
+    "spk_1791926121607": {
+      "customUrl": "./images/speaker_ts_yeong_chin_chow.png",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Ts. Yeong Chin Chow",
+      "description": "Head Commissioner, ASEAN Engineering Register."
+    },
+    "spk_1792011173758": {
+      "customUrl": "./images/speaker_dr_ali_al_alawi.webp",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Dr. Ali Humaid Mohammed Al Alawi",
+      "description": "Board Chairman, Grand Institute for Practical Application (GIPA)."
+    },
+    "partner_ptc": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Grand Institute for Practical Application (GIPA)",
+      "description": "Sultanate of Oman's Premier Technical Institute"
+    },
+    "partner_utas": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "UTAS Oman Insignia",
+      "description": "University of Technology and Applied Sciences Oman emblem."
+    },
+    "partner_ieee": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "The World Bright Pillars LLC (EXCELLENCE-Beyond than Venue)",
+      "description": "We Provide Exceptional Solutions for events and Venue"
+    },
+    "partner_cisco": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "cover"
+      },
+      "name": "Cisco Networking Academy Seal",
+      "description": "Cisco Networking Academy verified partner emblem."
+    },
+    "partner_1791919214161": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "contain"
+      },
+      "name": "Institute of Computer Engineer of the Philippines Inc. (PARTNER)",
+      "description": "Professional body, or technology industry leader"
+    },
+    "partner_1791920199106": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "contain"
+      },
+      "name": "Philippine Technological Council - MENA Oman (PARTNER)",
+      "description": "Professional Accreditation and Engineering mobilization. "
+    },
+    "partner_4": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "contain"
+      },
+      "name": "Philippine Technological Council (PTC) (PTC MENA)",
+      "description": "The Umbrella Organization of 13 PRC-Accredited Engineering Disciplines"
+    },
+    "partner_5": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "contain"
+      },
+      "name": "Cisco Networking Academy (Cisco NetAcad)",
+      "description": "Global Skills-to-Jobs Education Program"
+    },
+    "partner_6": {
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "contain"
+      },
+      "name": "IEEE Oman Section (IEEE Oman) (IEEE Oman)",
+      "description": "Institute of Electrical and Electronics Engineers — Sultanate of Oman"
+    }
   }
 }
