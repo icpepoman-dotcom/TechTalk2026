@@ -130,7 +130,7 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
   },
   spk_maglalang: {
     id: 'spk_maglalang',
-    name: 'Engr. Leopoldo Jr Maglalang',
+    name: 'Engr. Leopoldo Maglalang Jr.',
     category: 'speakers',
     defaultUrl: defaultSpkMaglalang,
     aspectRatio: '1:1',
@@ -221,7 +221,7 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
   },
   spk_canlas: {
     id: 'spk_canlas',
-    name: 'Dr. Ferdi Canlas',
+    name: 'Dr. Ferddie Q. Canlas',
     category: 'speakers',
     defaultUrl: defaultSpkCanlas,
     aspectRatio: '1:1',
@@ -255,12 +255,12 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
     adjustments: { ...DEFAULT_ADJUSTMENTS },
     presets: [
       { name: 'PTC-ERB Chair Agatep Official', url: defaultSpkAgatep },
-      { name: 'Council Dignitary', url: defaultSpkMonsada }
+      { name: 'Council Dignitary', url: defaultSpkAgatep }
     ]
   },
   spk_crisostomo: {
     id: 'spk_crisostomo',
-    name: 'Dr. Ana Shiela Crisostomo',
+    name: 'Dr. Anna Shiela I. Crisostomo',
     category: 'speakers',
     defaultUrl: defaultSpkCrisostomo,
     aspectRatio: '1:1',
