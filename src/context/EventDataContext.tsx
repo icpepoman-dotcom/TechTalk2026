@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import {
   EVENT_DETAILS as INITIAL_EVENT_DETAILS,
   COLLABORATING_ORGS as INITIAL_COLLABORATING_ORGS,
@@ -12,6 +12,9 @@ import {
 } from '../data/eventData';
 import { DaySchedule, Speaker, ShortCourse, RegistrationTier, RegistrationSubmission, ScheduleItem, CollaboratingOrg } from '../types';
 import { dbSetItem, dbGetItem, dbRemoveItem } from '../utils/storageDb';
+import siteState from '../data/site_state.json';
+
+const rawSite = (siteState as Record<string, any>) || {};
 
 export interface CpdSectionData {
   units: number;
@@ -27,7 +30,7 @@ export interface CpdSectionData {
   buttonText: string;
 }
 
-export const INITIAL_CPD_DATA: CpdSectionData = {
+export const DEFAULT_CPD_DATA: CpdSectionData = {
   units: 10,
   badgeLabel: "10 CPD Units",
   headlinePrefix: "Attend the Full Hybrid Experience — ",
@@ -40,6 +43,10 @@ export const INITIAL_CPD_DATA: CpdSectionData = {
   virtualBulletText: "Specialized workshops, 6 full remote short courses (AI, Cyber, IoT, Data Science), and intPE conferment stream.",
   buttonText: "Select Full Hybrid Registration"
 };
+
+export const INITIAL_CPD_DATA: CpdSectionData = (rawSite.cpdData && typeof rawSite.cpdData === 'object')
+  ? { ...DEFAULT_CPD_DATA, ...rawSite.cpdData }
+  : DEFAULT_CPD_DATA;
 
 const STORAGE_KEY_EVENT_DATA = 'icpep_techtalk_2026_full_event_data';
 const STORAGE_KEY_ATTENDEES = 'icpep_techtalk_2026_attendees';
@@ -157,7 +164,7 @@ export const EventDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [workshopTracks, setWorkshopTracks] = useState(INITIAL_WORKSHOP_TRACKS);
   const [registrationTiers, setRegistrationTiers] = useState<RegistrationTier[]>(INITIAL_REGISTRATION_TIERS);
   const [speakers, setSpeakers] = useState<Speaker[]>(INITIAL_SPEAKERS);
-  const [venueInfo, setVenueInfo] = useState(INITIAL_VENUE_INFO);
+  const [venueInfo, setVenueInfo] = useState<typeof INITIAL_VENUE_INFO>(INITIAL_VENUE_INFO);
   const [attendees, setAttendees] = useState<RegistrationSubmission[]>(SEED_ATTENDEES);
 
   // Admin state
@@ -362,6 +369,17 @@ export const EventDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }
   };
 
+  const isLoadedRef = useRef(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      isLoadedRef.current = true;
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Debounced auto-save to server disk so ANY edit made anywhere on the page
+  // automatically updates site_state.json on disk without needing manual clicks.
   useEffect(() => {
     saveStateToStorage({
       eventDetails,
@@ -375,6 +393,31 @@ export const EventDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       speakers,
       venueInfo
     });
+
+    if (!isLoadedRef.current) return;
+
+    const timeout = setTimeout(() => {
+      fetch('/api/site-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          version: 'icpep-techtalk-2026-v2',
+          savedAt: new Date().toISOString(),
+          eventDetails,
+          cpdData,
+          collaboratingOrgs,
+          globalPartnerships,
+          daySchedules,
+          shortCourses,
+          workshopTracks,
+          registrationTiers,
+          speakers,
+          venueInfo
+        })
+      }).catch(() => {});
+    }, 1200);
+
+    return () => clearTimeout(timeout);
   }, [
     eventDetails,
     cpdData,
@@ -439,7 +482,7 @@ export const EventDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   };
 
   const updateVenueInfo = (venue: Partial<typeof INITIAL_VENUE_INFO>) => {
-    setVenueInfo((prev) => ({ ...prev, ...venue }));
+    setVenueInfo((prev: typeof INITIAL_VENUE_INFO) => ({ ...prev, ...venue }));
   };
 
   const addAttendee = (submission: RegistrationSubmission) => {

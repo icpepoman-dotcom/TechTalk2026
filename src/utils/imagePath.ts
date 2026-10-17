@@ -11,6 +11,15 @@ export function resolveImageUrl(url: string | undefined | null): string {
   if (url.startsWith('/src/assets/images/')) {
     return url.replace('/src/assets/images/', './images/');
   }
+  if (url.startsWith('src/assets/images/')) {
+    return url.replace('src/assets/images/', './images/');
+  }
+  if (url.startsWith('/images/')) {
+    return '.' + url;
+  }
+  if (url.startsWith('images/')) {
+    return './' + url;
+  }
   return url;
 }
 

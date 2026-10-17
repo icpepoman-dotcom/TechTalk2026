@@ -3,6 +3,7 @@ import { useEventData } from './EventDataContext';
 import { dbSetItem, dbGetItem, dbRemoveItem } from '../utils/storageDb';
 import { compressImage } from '../utils/imageCompressor';
 import { resolveImageUrl, syncImageToDisk } from '../utils/imagePath';
+import siteState from '../data/site_state.json';
 
 // Default asset paths
 import defaultHeroImg from '../assets/images/hero_tech_engineer_muscat_1790851939093.jpg';
@@ -376,6 +377,84 @@ const DEFAULT_IMAGE_SLOTS: Record<string, ImageSlot> = {
     adjustments: { ...DEFAULT_ADJUSTMENTS }
   }
 };
+
+// Auto-seed DEFAULT_IMAGE_SLOTS with saved customImages from site_state.json
+// This ensures that when the site is compiled for production (GitHub Pages),
+// ALL custom sponsor logos, custom photos, and logo adjustments are baked in as defaults.
+const rawSiteState = (siteState as Record<string, any>) || {};
+if (rawSiteState.customImages && typeof rawSiteState.customImages === 'object') {
+  for (const [key, slotVal] of Object.entries(rawSiteState.customImages)) {
+    if (!slotVal || typeof slotVal !== 'object') continue;
+    const item = slotVal as any;
+    if (DEFAULT_IMAGE_SLOTS[key]) {
+      DEFAULT_IMAGE_SLOTS[key] = {
+        ...DEFAULT_IMAGE_SLOTS[key],
+        name: item.name || DEFAULT_IMAGE_SLOTS[key].name,
+        description: item.description || DEFAULT_IMAGE_SLOTS[key].description,
+        defaultUrl: item.customUrl || DEFAULT_IMAGE_SLOTS[key].defaultUrl,
+        customUrl: item.customUrl || DEFAULT_IMAGE_SLOTS[key].customUrl,
+        adjustments: {
+          ...DEFAULT_IMAGE_SLOTS[key].adjustments,
+          ...(item.adjustments || {})
+        }
+      };
+    } else if (key.startsWith('partner_')) {
+      DEFAULT_IMAGE_SLOTS[key] = {
+        id: key,
+        name: item.name || 'Collaborating Partner',
+        category: 'partners',
+        defaultUrl: item.customUrl || '',
+        customUrl: item.customUrl,
+        aspectRatio: '1:1',
+        description: item.description || 'Institutional Collaborator Emblem',
+        adjustments: {
+          ...DEFAULT_ADJUSTMENTS,
+          objectFit: 'contain',
+          ...(item.adjustments || {})
+        }
+      };
+    }
+  }
+}
+
+// Auto-seed DEFAULT_IMAGE_SLOTS for speakers from rawSiteState.speakers
+if (Array.isArray(rawSiteState.speakers)) {
+  for (const spk of rawSiteState.speakers) {
+    if (!spk || !spk.id) continue;
+    const slotId = spk.id.replace(/-/g, '_');
+    const resolvedPhoto = resolveImageUrl(spk.photoUrl);
+    if (DEFAULT_IMAGE_SLOTS[slotId]) {
+      if (resolvedPhoto) {
+        DEFAULT_IMAGE_SLOTS[slotId] = {
+          ...DEFAULT_IMAGE_SLOTS[slotId],
+          defaultUrl: resolvedPhoto,
+          customUrl: resolvedPhoto
+        };
+      }
+    } else {
+      DEFAULT_IMAGE_SLOTS[slotId] = {
+        id: slotId,
+        name: spk.name || 'Speaker',
+        category: 'speakers',
+        defaultUrl: resolvedPhoto || '',
+        customUrl: resolvedPhoto,
+        aspectRatio: '1:1',
+        description: `${spk.title || ''} - ${spk.organization || ''}`,
+        adjustments: { ...DEFAULT_ADJUSTMENTS }
+      };
+    }
+  }
+}
+
+// Auto-seed QR code registration slot
+if (rawSiteState.eventDetails?.qrCodeCustomUrl && DEFAULT_IMAGE_SLOTS['qrcode_slot']) {
+  const resolvedQr = resolveImageUrl(rawSiteState.eventDetails.qrCodeCustomUrl);
+  DEFAULT_IMAGE_SLOTS['qrcode_slot'] = {
+    ...DEFAULT_IMAGE_SLOTS['qrcode_slot'],
+    defaultUrl: resolvedQr,
+    customUrl: resolvedQr
+  };
+}
 
 const STORAGE_KEY = 'icpep_techtalk_2026_custom_images';
 

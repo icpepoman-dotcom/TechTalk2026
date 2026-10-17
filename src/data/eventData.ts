@@ -16,27 +16,31 @@ import spkIntpeConfereesImg from '../assets/images/speaker_intpe_conferees_17919
 import spkYeongImg from '../assets/images/speaker_ts_yeong_chin_chow.png';
 import spkAlAlawiImg from '../assets/images/speaker_dr_ali_al_alawi.webp';
 import qrCodeRegistrationImg from '../assets/images/qr_code_registration.webp';
+import siteState from './site_state.json';
+
+const rawSite = (siteState as Record<string, any>) || {};
+const savedDetails = rawSite.eventDetails || {};
 
 export const EVENT_DETAILS = {
-  name: "ICpEP-Oman TechTalk 2026",
-  chapter: "Institute of Computer Engineers of the Philippines — Oman Chapter",
-  theme: "Engineering the Digital Future: Technology, Innovation and Professional Excellence.",
-  tagline: "Connect. Learn. Innovate. Celebrate.",
-  subheading: "Empowering Engineers and Computing Professionals through Technology and Global Certification.",
-  datesSummary: "October 30 – 31, 2026",
-  venueSummary: "Wyndham Hotel, Muscat, Oman & Virtual Breakout Hub",
-  bannerNotice: "Limited slots available — scan or click to register",
-  registrationDeadline: "October 25, 2026",
-  slotsRemaining: 47,
-  totalCapacity: 350,
-  contactEmail: "icpep.oman@gmail.com",
-  globalRegistrationUrl: "",
-  useCustomRegistrationRedirect: false,
-  qrCodeCustomUrl: qrCodeRegistrationImg,
-  qrCodeTargetUrl: "",
-  qrCodeType: "auto" as "auto" | "custom_image",
-  qrCodeCenterLogo: true,
-  footerTags: [
+  name: savedDetails.name || "ICpEP-Oman TechTalk 2026",
+  chapter: savedDetails.chapter || "Institute of Computer Engineers of the Philippines  Inc.—  Oman Chapter in Partnership with Grand Institute for Practical Application",
+  theme: savedDetails.theme || "Engineering the Digital Future: Technology, Innovation and Professional Excellence.",
+  tagline: savedDetails.tagline || "Connect. Learn. Innovate. Celebrate.",
+  subheading: savedDetails.subheading || "Empowering Engineers and Computing Professionals through Technology and Global Certification.",
+  datesSummary: savedDetails.datesSummary || "October 30 – 31, 2026",
+  venueSummary: savedDetails.venueSummary || "Wyndham Hotel, Muscat, Oman & Virtual Breakout Hub",
+  bannerNotice: savedDetails.bannerNotice || "Limited slots available — scan or click to register",
+  registrationDeadline: savedDetails.registrationDeadline || "October 25, 2026",
+  slotsRemaining: savedDetails.slotsRemaining ?? 100,
+  totalCapacity: savedDetails.totalCapacity ?? 350,
+  contactEmail: savedDetails.contactEmail || "icpep.oman@gmail.com",
+  globalRegistrationUrl: savedDetails.globalRegistrationUrl || "https://forms.gle/zbrtdAQVG5KsyoHB9",
+  useCustomRegistrationRedirect: savedDetails.useCustomRegistrationRedirect ?? true,
+  qrCodeCustomUrl: savedDetails.qrCodeCustomUrl || qrCodeRegistrationImg,
+  qrCodeTargetUrl: savedDetails.qrCodeTargetUrl || "https://forms.gle/kE851fnuukmbQZws8",
+  qrCodeType: (savedDetails.qrCodeType as "auto" | "custom_image") || "auto",
+  qrCodeCenterLogo: savedDetails.qrCodeCenterLogo ?? true,
+  footerTags: savedDetails.footerTags || [
     "Technology",
     "Professional Growth",
     "Industry Connections",
@@ -44,7 +48,7 @@ export const EVENT_DETAILS = {
   ]
 };
 
-export const COLLABORATING_ORGS: CollaboratingOrg[] = [
+export const DEFAULT_COLLABORATING_ORGS: CollaboratingOrg[] = [
   {
     id: "partner_ptc",
     name: "Philippine Technological Council (PTC) MENA",
@@ -83,7 +87,11 @@ export const COLLABORATING_ORGS: CollaboratingOrg[] = [
   }
 ];
 
-export const GLOBAL_PARTNERSHIPS = [
+export const COLLABORATING_ORGS: CollaboratingOrg[] = (Array.isArray(rawSite.collaboratingOrgs) && rawSite.collaboratingOrgs.length > 0)
+  ? rawSite.collaboratingOrgs
+  : DEFAULT_COLLABORATING_ORGS;
+
+export const DEFAULT_GLOBAL_PARTNERSHIPS = [
   {
     title: "Philippine Technological Council (PTC)",
     description: "Globally Recognized, Professionally Empowered — signatory to the Washington Accord and International Engineering Alliance.",
@@ -106,7 +114,11 @@ export const GLOBAL_PARTNERSHIPS = [
   }
 ];
 
-export const DAY_SCHEDULES: DaySchedule[] = [
+export const GLOBAL_PARTNERSHIPS = (Array.isArray(rawSite.globalPartnerships) && rawSite.globalPartnerships.length > 0)
+  ? rawSite.globalPartnerships
+  : DEFAULT_GLOBAL_PARTNERSHIPS;
+
+export const DEFAULT_DAY_SCHEDULES: DaySchedule[] = [
   {
     day: 1,
     date: "October 30, 2026",
@@ -681,7 +693,11 @@ export const DAY_SCHEDULES: DaySchedule[] = [
   }
 ];
 
-export const SHORT_COURSES: ShortCourse[] = [
+export const DAY_SCHEDULES: DaySchedule[] = (Array.isArray(rawSite.daySchedules) && rawSite.daySchedules.length > 0)
+  ? rawSite.daySchedules
+  : DEFAULT_DAY_SCHEDULES;
+
+export const DEFAULT_SHORT_COURSES: ShortCourse[] = [
   {
     id: "sc-1",
     title: "Introduction to Modern Artificial Intelligence",
@@ -738,7 +754,11 @@ export const SHORT_COURSES: ShortCourse[] = [
   }
 ];
 
-export const WORKSHOP_TRACKS = [
+export const SHORT_COURSES: ShortCourse[] = (Array.isArray(rawSite.shortCourses) && rawSite.shortCourses.length > 0)
+  ? rawSite.shortCourses
+  : DEFAULT_SHORT_COURSES;
+
+export const DEFAULT_WORKSHOP_TRACKS = [
   {
     title: "Artificial Intelligence & Generative AI",
     summary: "Production-ready AI architectures, generative agents, and ethical enterprise adoption.",
@@ -766,7 +786,11 @@ export const WORKSHOP_TRACKS = [
   }
 ];
 
-export const REGISTRATION_TIERS: RegistrationTier[] = [
+export const WORKSHOP_TRACKS = (Array.isArray(rawSite.workshopTracks) && rawSite.workshopTracks.length > 0)
+  ? rawSite.workshopTracks
+  : DEFAULT_WORKSHOP_TRACKS;
+
+export const DEFAULT_REGISTRATION_TIERS: RegistrationTier[] = [
   {
     id: "tier-f2f",
     name: "Face-to-Face Attendee",
@@ -825,7 +849,11 @@ export const REGISTRATION_TIERS: RegistrationTier[] = [
   }
 ];
 
-export const SPEAKERS: Speaker[] = [
+export const REGISTRATION_TIERS: RegistrationTier[] = (Array.isArray(rawSite.registrationTiers) && rawSite.registrationTiers.length > 0)
+  ? rawSite.registrationTiers
+  : DEFAULT_REGISTRATION_TIERS;
+
+export const DEFAULT_SPEAKERS: Speaker[] = [
   {
     id: "spk-apag",
     name: "Dr. Desiderio A. Apag III",
@@ -988,7 +1016,18 @@ export const SPEAKERS: Speaker[] = [
   }
 ];
 
-export const VENUE_INFO = {
+export const SPEAKERS: Speaker[] = (Array.isArray(rawSite.speakers) && rawSite.speakers.length > 0)
+  ? rawSite.speakers.map((s: Speaker) => {
+      const def = DEFAULT_SPEAKERS.find((d) => d.id === s.id);
+      return {
+        ...def,
+        ...s,
+        photoUrl: s.photoUrl || def?.photoUrl || ''
+      };
+    })
+  : DEFAULT_SPEAKERS;
+
+export const DEFAULT_VENUE_INFO = {
   name: "Wyndham Hotel Muscat",
   city: "Muscat, Sultanate of Oman",
   address: "Al Khuwair, Muscat, Sultanate of Oman",
@@ -1005,3 +1044,7 @@ export const VENUE_INFO = {
     "Dedicated registration concourse and corporate networking lounge"
   ]
 };
+
+export const VENUE_INFO = rawSite.venueInfo
+  ? { ...DEFAULT_VENUE_INFO, ...rawSite.venueInfo }
+  : DEFAULT_VENUE_INFO;

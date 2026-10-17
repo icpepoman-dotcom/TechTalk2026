@@ -41,7 +41,7 @@ export const CollaboratorsTextModal: React.FC<CollaboratorsTextModalProps> = ({
   initialIndex = 0,
   initialTab = 'arrange'
 }) => {
-  const { collaboratingOrgs, updateCollaboratingOrgs } = useEventData();
+  const { collaboratingOrgs, updateCollaboratingOrgs, saveToServer } = useEventData();
   const { openEditor, getImageUrl } = useImageManager();
   const [orgs, setOrgs] = useState<CollaboratingOrg[]>([]);
   const [activeIdx, setActiveIdx] = useState<number>(0);
@@ -142,6 +142,9 @@ export const CollaboratorsTextModal: React.FC<CollaboratorsTextModalProps> = ({
 
   const handleSave = () => {
     updateCollaboratingOrgs(orgs);
+    if (saveToServer) {
+      saveToServer();
+    }
     setShowSavedToast(true);
     setTimeout(() => {
       setShowSavedToast(false);

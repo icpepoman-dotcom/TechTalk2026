@@ -16,8 +16,9 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 const DATA_FILE = path.join(__dirname, 'src', 'data', 'site_state.json');
 const IMAGES_DIR = path.join(__dirname, 'src', 'assets', 'images');
 const PUBLIC_IMAGES_DIR = path.join(__dirname, 'public', 'images');
+const DIST_IMAGES_DIR = path.join(__dirname, 'dist', 'images');
 
-// Helper to save base64 data URLs to disk in both src/assets/images/ and public/images/
+// Helper to save base64 data URLs to disk in src/assets/images/, public/images/, and dist/images/
 function saveBase64Image(dataUrl: string, baseName: string): string | null {
   if (!dataUrl || typeof dataUrl !== 'string' || !dataUrl.startsWith('data:image/')) {
     return null;
@@ -28,6 +29,9 @@ function saveBase64Image(dataUrl: string, baseName: string): string | null {
     }
     if (!fs.existsSync(PUBLIC_IMAGES_DIR)) {
       fs.mkdirSync(PUBLIC_IMAGES_DIR, { recursive: true });
+    }
+    if (fs.existsSync(path.join(__dirname, 'dist')) && !fs.existsSync(DIST_IMAGES_DIR)) {
+      fs.mkdirSync(DIST_IMAGES_DIR, { recursive: true });
     }
     const matches = dataUrl.match(/^data:image\/([a-zA-Z0-9\+\-\.]+);base64,(.+)$/);
     if (!matches) return null;
@@ -42,7 +46,10 @@ function saveBase64Image(dataUrl: string, baseName: string): string | null {
     const buffer = Buffer.from(matches[2], 'base64');
     fs.writeFileSync(filePath, buffer);
     fs.writeFileSync(publicFilePath, buffer);
-    console.log(`[Disk Sync] Saved image to disk: ${fileName} (${buffer.length} bytes) in src/assets/images and public/images`);
+    if (fs.existsSync(DIST_IMAGES_DIR)) {
+      fs.writeFileSync(path.join(DIST_IMAGES_DIR, fileName), buffer);
+    }
+    console.log(`[Disk Sync] Saved image to disk: ${fileName} (${buffer.length} bytes) in images folders`);
     return `./images/${fileName}`;
   } catch (err) {
     console.error(`[Disk Sync Error] Failed to save image ${baseName}:`, err);
@@ -114,7 +121,22 @@ app.post('/api/site-data', (req, res) => {
       }
     }
 
-    // 4. Save state file with clean file references
+    // 4. Extract and write collaborator logos if base64
+    if (Array.isArray(payload.collaboratingOrgs)) {
+      for (let i = 0; i < payload.collaboratingOrgs.length; i++) {
+        const org = payload.collaboratingOrgs[i];
+        if (org && org.logo && typeof org.logo === 'string' && org.logo.startsWith('data:image/')) {
+          const safeName = (org.shortName || org.id || `partner_${i}`).replace(/[^a-zA-Z0-9]/g, '_');
+          const diskPath = saveBase64Image(org.logo, `partner_${safeName}`);
+          if (diskPath) {
+            org.logo = diskPath;
+            savedImagesCount++;
+          }
+        }
+      }
+    }
+
+    // 5. Save state file with clean file references
     const dataDir = path.dirname(DATA_FILE);
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });

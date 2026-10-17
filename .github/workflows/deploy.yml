@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -11,7 +12,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -27,19 +28,25 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Install dependencies & Build
         run: |
           npm install --legacy-peer-deps
           npm run build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: Ensure .nojekyll and 404 exist in dist
+        run: |
+          touch dist/.nojekyll
+          cp public/404.html dist/404.html || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist' # Or './build' depending on your build output directory
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment

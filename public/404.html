@@ -6,8 +6,9 @@
     <title>ICpEP-Oman TechTalk 2026</title>
     <script>
       // Single Page App redirect for GitHub Pages
-      // If a subpath was requested, redirect back to the app root preserving query and hash
-      var pathSegmentsToKeep = 0;
+      // If hosted on GitHub Pages subfolder (e.g. icpepoman-dotcom.github.io/TechTalk2026/), keep 1 segment.
+      var isGitHubPagesSubpath = window.location.hostname.indexOf('github.io') !== -1;
+      var pathSegmentsToKeep = isGitHubPagesSubpath ? 1 : 0;
       var l = window.location;
       l.replace(
         l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +

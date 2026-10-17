@@ -21,7 +21,7 @@ import { CollaboratorsTextModal } from './CollaboratorsTextModal';
 
 export const Collaborators: React.FC = () => {
   const { getImageUrl, getImageStyle, openEditor } = useImageManager();
-  const { collaboratingOrgs, updateCollaboratingOrgs, globalPartnerships, isPublishMode } = useEventData();
+  const { collaboratingOrgs, updateCollaboratingOrgs, globalPartnerships, isPublishMode, saveToServer } = useEventData();
   const [isTextModalOpen, setIsTextModalOpen] = useState(false);
   const [selectedOrgIdx, setSelectedOrgIdx] = useState(0);
   const [modalTab, setModalTab] = useState<'edit' | 'arrange'>('arrange');
@@ -52,6 +52,9 @@ export const Collaborators: React.FC = () => {
     const [removed] = updated.splice(index, 1);
     updated.splice(targetIndex, 0, removed);
     updateCollaboratingOrgs(updated);
+    if (saveToServer) {
+      saveToServer();
+    }
   };
 
   const getContainerHeightClass = () => {

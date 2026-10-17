@@ -301,7 +301,7 @@ export const WorkshopsAndCourses: React.FC<WorkshopsAndCoursesProps> = ({ onEnro
                 </div>
 
                 <div className="pt-2 border-t border-[#e5b94c]/15 space-y-1">
-                  {track.topics.map((top, sIdx) => (
+                  {track.topics.map((top: string, sIdx: number) => (
                     <div key={sIdx} className="text-[11px] text-slate-400 flex items-center gap-1.5">
                       <span className="w-1 h-1 rounded-full bg-[#e5b94c]" />
                       <span>{top}</span>

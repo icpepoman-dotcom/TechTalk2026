@@ -141,7 +141,7 @@ export const VenueSection: React.FC = () => {
                     Key Facilities for ICpEP Delegates:
                   </h4>
                   <ul className="space-y-2 text-xs">
-                    {venueInfo.highlights.map((h, i) => (
+                    {venueInfo.highlights.map((h: string, i: number) => (
                       <li key={i} className="flex items-start gap-2 text-slate-300">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#e5b94c] shrink-0 mt-1.5" />
                         <span>{h}</span>
