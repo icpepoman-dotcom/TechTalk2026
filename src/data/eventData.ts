@@ -209,7 +209,7 @@ export const DEFAULT_DAY_SCHEDULES: DaySchedule[] = [
             description: "Professional excellence, global recognition, and engineering leadership across borderless economies.",
             speakers: [
               {
-                name: "Engr. Leopoldo Jr Maglalang",
+                name: "Engr. Leopoldo M. Maglalang Jr.",
                 role: "PTC President & ICpEP-Oman President",
                 organization: "Philippine Technological Council (PTC)"
               }
@@ -223,7 +223,7 @@ export const DEFAULT_DAY_SCHEDULES: DaySchedule[] = [
             description: "Competency frameworks, portfolio assessment, peer review, and international recognition requirements.",
             speakers: [
               {
-                name: "Engr. Leopoldo Jr Maglalang",
+                name: "Engr. Leopoldo M. Maglalang Jr.",
                 role: "Chair, PTC Engineers Registration Board",
                 organization: "PTC Engineers Registration Board (PTC-ERB)"
               }
@@ -293,7 +293,7 @@ export const DEFAULT_DAY_SCHEDULES: DaySchedule[] = [
             description: "High-level interactive panel examining AI orchestration, cloud computing, cybersecurity, and global professional licensing.",
             speakers: [
               {
-                name: "Dr. Ferdi Canlas",
+                name: "Dr. Ferddie Q. Canlas",
                 role: "Panel Moderator",
                 organization: "ICpEP-Oman TechTalk 2026"
               }
@@ -440,7 +440,7 @@ export const DEFAULT_DAY_SCHEDULES: DaySchedule[] = [
             title: "Anniversary Message",
             speakers: [
               {
-                name: "Dr. Ana Shiela Crisostomo",
+                name: "Dr. Anna Shiela I. Crisostomo",
                 role: "ICpEP-Oman VP Internal",
                 organization: "ICpEP-Oman Chapter"
               }
@@ -673,7 +673,7 @@ export const DEFAULT_DAY_SCHEDULES: DaySchedule[] = [
             title: "Vote of Thanks",
             speakers: [
               {
-                name: "Engr. Leopoldo Jr Maglalang",
+                name: "Engr. Leopoldo M. Maglalang Jr.",
                 role: "ICpEP-Oman President",
                 organization: "ICpEP-Oman Chapter"
               }
@@ -866,7 +866,7 @@ export const DEFAULT_SPEAKERS: Speaker[] = [
   },
   {
     id: "spk-maglalang",
-    name: "Engr. Leopoldo Jr Maglalang",
+    name: "Engr. Leopoldo M. Maglalang Jr.",
     title: "ICpEP-Oman President & Chair, PTC Engineers Registration Board",
     organization: "ICpEP-Oman Chapter / PTC-ERB",
     topic: "Pathways to Professional Engineering Registration & Leadership",
@@ -936,7 +936,7 @@ export const DEFAULT_SPEAKERS: Speaker[] = [
   },
   {
     id: "spk-canlas",
-    name: "Dr. Ferdi Canlas",
+    name: "Dr. Ferddie Q. Canlas",
     title: "Panel Moderator & Distinguished Educator",
     organization: "ICpEP-Oman Chapter",
     topic: "Industry Leaders Panel: What Skills Will Engineers/IT/ComSci Need in the Next Five Years?",
@@ -966,7 +966,7 @@ export const DEFAULT_SPEAKERS: Speaker[] = [
   },
   {
     id: "spk-crisostomo",
-    name: "Dr. Ana Shiela Crisostomo",
+    name: "Dr. Anna Shiela I. Crisostomo",
     title: "ICpEP-Oman VP Internal",
     organization: "ICpEP-Oman Chapter",
     topic: "Institutional Synergy, Internal Governance & Regional Computing Milestones",
