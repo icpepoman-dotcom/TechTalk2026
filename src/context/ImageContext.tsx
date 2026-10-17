@@ -19,7 +19,7 @@ import defaultSpkMonsada from '../assets/images/speaker_engr_monsada_updated.png
 import defaultSpkTambaoan from '../assets/images/speaker_engr_tambaoan_updated.png';
 import defaultSpkCanlas from '../assets/images/speaker_dr_canlas_updated.png';
 import defaultSpkManglicmot from '../assets/images/speaker_engr_manglicmot_updated.png';
-import defaultSpkAgatep from '../assets/images/speaker_engr_agatep_1791927651523.jpg';
+import defaultSpkAgatep from '../assets/images/slot_spk_agatep.webp';
 import defaultSpkAerConferees from '../assets/images/speaker_aer_conferees_1791927650929.jpg';
 import defaultSpkIntpeConferees from '../assets/images/speaker_intpe_conferees_1791927652021.jpg';
 import defaultSpkCrisostomo from '../assets/images/speaker_dr_crisostomo_updated.png';
