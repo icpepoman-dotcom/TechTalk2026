@@ -234,7 +234,7 @@ export const EventDataProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     if (parsed.collaboratingOrgs) setCollaboratingOrgs(parsed.collaboratingOrgs);
     if (parsed.globalPartnerships) setGlobalPartnerships(parsed.globalPartnerships);
     if (parsed.daySchedules) {
-      // Ensure panel talk d1-13 has Dr. Ferdi Canlas as moderator
+      // Ensure panel talk d1-13 has Dr. Ferddie Q. Canlas as moderator
       const patchedSchedules = parsed.daySchedules.map((ds: DaySchedule) => {
         if (ds.day === 1) {
           return {

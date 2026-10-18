@@ -9,7 +9,7 @@ import spkMonsadaImg from '../assets/images/speaker_engr_monsada_updated.png';
 import spkTambaoanImg from '../assets/images/speaker_engr_tambaoan_updated.png';
 import spkCanlasImg from '../assets/images/speaker_dr_canlas_updated.png';
 import spkManglicmotImg from '../assets/images/speaker_engr_manglicmot_updated.png';
-import spkAgatepImg from '../assets/images/slot_spk_agatep.webp';
+import spkAgatepImg from '../assets/images/Engr.Agatep.png';
 import spkCrisostomoImg from '../assets/images/speaker_dr_crisostomo_updated.png';
 import spkAerConfereesImg from '../assets/images/speaker_aer_conferees_1791927650929.jpg';
 import spkIntpeConfereesImg from '../assets/images/speaker_intpe_conferees_1791927652021.jpg';
@@ -153,7 +153,7 @@ export const DEFAULT_DAY_SCHEDULES: DaySchedule[] = [
             description: "Opening of the TechTalk 2026 conference and welcoming of local and international delegations.",
             speakers: [
               {
-                name: "Engr. Leopoldo Jr Maglalang",
+                name: "Engr. Leopoldo M. Maglalang Jr.",
                 role: "ICpEP-Oman President",
                 organization: "ICpEP-Oman Chapter"
               }
