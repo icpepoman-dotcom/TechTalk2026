@@ -1,6 +1,6 @@
 {
   "version": "icpep-techtalk-2026-v2",
-  "savedAt": "2026-10-17T17:42:22.619Z",
+  "savedAt": "2026-10-18T09:53:07.895Z",
   "eventDetails": {
     "name": "ICpEP-Oman TechTalk 2026",
     "chapter": "Institute of Computer Engineers of the Philippines  Inc.—  Oman Chapter in Partnership with Grand Institute for Practical Application",
@@ -42,46 +42,55 @@
   },
   "collaboratingOrgs": [
     {
+      "id": "partner_gipa",
       "name": "Grand Institute for Practical Application",
       "subtitle": "Sultanate of Oman's Premier Technical Institute",
       "shortName": "GIPA",
-      "role": "Technical  Institute  Partner",
+      "role": "Technical Institute Partner",
       "accreditations": [
         "Curriculum & Student Innovation Exchange"
-      ]
+      ],
+      "logo": "./images/partner_gipa_logo.svg",
+      "websiteUrl": ""
     },
     {
       "id": "partner_1791919214161",
       "name": "Institute of Computer Engineer of the Philippines Inc.",
       "subtitle": "Professional body, or technology industry leader",
-      "shortName": "PARTNER",
+      "shortName": "ICpEP Inc.",
       "role": "Strategic Partner",
       "accreditations": [
         "Collaborative Initiative"
       ],
+      "logo": "./images/slot_partner_1791919214161.webp",
       "websiteUrl": ""
     },
     {
+      "id": "partner_world_bright_pillars",
       "name": "The World Bright Pillars LLC",
       "subtitle": "We Provide Exceptional Solutions for events and Venue",
-      "shortName": "EXCELLENCE-Beyond than Venue",
+      "shortName": "Bright Pillars",
       "role": "Strategic Partner",
       "accreditations": [
         "Collaborative Initiative"
-      ]
+      ],
+      "logo": "./images/partner_bright_pillars_logo.svg",
+      "websiteUrl": ""
     },
     {
       "id": "partner_1791920199106",
       "name": "Philippine Technological Council - MENA Oman",
-      "subtitle": "Professional Accreditation and Engineering mobilization. ",
-      "shortName": "PARTNER",
+      "subtitle": "Professional Accreditation and Engineering mobilization.",
+      "shortName": "PTC MENA Oman",
       "role": "Strategic Partner",
       "accreditations": [
         "Collaborative Initiative"
       ],
+      "logo": "./images/slot_partner_1791920199106.webp",
       "websiteUrl": ""
     },
     {
+      "id": "partner_ptc",
       "name": "Philippine Technological Council (PTC)",
       "subtitle": "The Umbrella Organization of 13 PRC-Accredited Engineering Disciplines",
       "shortName": "PTC MENA",
@@ -89,25 +98,33 @@
       "accreditations": [
         "ASEAN Engineer Registry (AER)",
         "International Professional Engineer (intPE)"
-      ]
+      ],
+      "logo": "./images/slot_partner_4.webp",
+      "websiteUrl": "https://ptc.org.ph"
     },
     {
+      "id": "partner_cisco",
       "name": "Cisco Networking Academy",
       "subtitle": "Global Skills-to-Jobs Education Program",
       "shortName": "Cisco NetAcad",
       "role": "Technology & Virtual Course Partner",
       "accreditations": [
         "Digital Badges & Remote Course Modules"
-      ]
+      ],
+      "logo": "./images/slot_partner_5.webp",
+      "websiteUrl": "https://www.netacad.com"
     },
     {
+      "id": "partner_ieee",
       "name": "IEEE Oman Section (IEEE Oman)",
       "subtitle": "Institute of Electrical and Electronics Engineers — Sultanate of Oman",
       "shortName": "IEEE Oman",
       "role": "Technical Co-Sponsor",
       "accreditations": [
         "Power, Computing & Smart Grid Knowledge Sharing"
-      ]
+      ],
+      "logo": "./images/slot_partner_6.webp",
+      "websiteUrl": "https://ieee.org"
     }
   ],
   "globalPartnerships": [
@@ -181,7 +198,7 @@
               "description": "Opening of the TechTalk 2026 conference and welcoming of local and international delegations.",
               "speakers": [
                 {
-                  "name": "Engr. Leopoldo Jr Maglalang",
+                  "name": "Engr. Leopoldo M. Maglalang Jr.",
                   "role": "ICpEP-Oman President",
                   "organization": "ICpEP-Oman Chapter"
                 }
@@ -494,7 +511,7 @@
               "title": "Anniversary Message",
               "speakers": [
                 {
-                  "name": "Dr. Ana Shiela Crisostomo",
+                  "name": "Dr. Anna Shiela I. Crisostomo",
                   "role": "ICpEP-Oman VP Internal",
                   "organization": "ICpEP-Oman Chapter"
                 }
@@ -949,7 +966,7 @@
     },
     {
       "id": "spk-maglalang",
-      "name": "Engr. Leopoldo Jr Maglalang",
+      "name": "Engr. Leopoldo M.  Maglalang Jr.",
       "title": "ICpEP-Oman President & Chair, PTC Engineers Registration Board",
       "organization": "ICpEP-Oman Chapter / PTC-ERB",
       "topic": "Pathways to Professional Engineering Registration & Leadership",
@@ -1365,55 +1382,86 @@
       "name": "Dr. Ali Humaid Mohammed Al Alawi",
       "description": "Board Chairman, Grand Institute for Practical Application (GIPA)."
     },
-    "partner_ptc": {
+    "partner_gipa": {
+      "name": "Grand Institute for Practical Application (GIPA)",
+      "description": "Sultanate of Oman's Premier Technical Institute",
+      "customUrl": "",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
         "saturate": 100,
         "goldTint": 0,
         "zoom": 100,
-        "objectFit": "cover"
+        "objectFit": "contain"
+      }
+    },
+    "partner_world_bright_pillars": {
+      "name": "The World Bright Pillars LLC",
+      "description": "We Provide Exceptional Solutions for events and Venue",
+      "customUrl": "",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "contain"
+      }
+    },
+    "partner_ptc": {
+      "customUrl": "./images/slot_partner_4.webp",
+      "adjustments": {
+        "brightness": 100,
+        "contrast": 100,
+        "saturate": 100,
+        "goldTint": 0,
+        "zoom": 100,
+        "objectFit": "contain"
       },
-      "name": "Grand Institute for Practical Application (GIPA)",
-      "description": "Sultanate of Oman's Premier Technical Institute"
+      "name": "Philippine Technological Council (PTC) MENA",
+      "description": "The Umbrella Organization of 13 PRC-Accredited Engineering Disciplines"
     },
     "partner_utas": {
+      "customUrl": "./images/partner_utas_updated.png",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
         "saturate": 100,
         "goldTint": 0,
         "zoom": 100,
-        "objectFit": "cover"
+        "objectFit": "contain"
       },
       "name": "UTAS Oman Insignia",
       "description": "University of Technology and Applied Sciences Oman emblem."
     },
     "partner_ieee": {
+      "customUrl": "./images/slot_partner_6.webp",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
         "saturate": 100,
         "goldTint": 0,
         "zoom": 100,
-        "objectFit": "cover"
+        "objectFit": "contain"
       },
-      "name": "The World Bright Pillars LLC (EXCELLENCE-Beyond than Venue)",
-      "description": "We Provide Exceptional Solutions for events and Venue"
+      "name": "IEEE Oman Section Logo",
+      "description": "Institute of Electrical and Electronics Engineers — Sultanate of Oman"
     },
     "partner_cisco": {
+      "customUrl": "./images/slot_partner_5.webp",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
         "saturate": 100,
         "goldTint": 0,
         "zoom": 100,
-        "objectFit": "cover"
+        "objectFit": "contain"
       },
       "name": "Cisco Networking Academy Seal",
       "description": "Cisco Networking Academy verified partner emblem."
     },
     "partner_1791919214161": {
+      "customUrl": "./images/slot_partner_1791919214161.webp",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
@@ -1422,10 +1470,11 @@
         "zoom": 100,
         "objectFit": "contain"
       },
-      "name": "Institute of Computer Engineer of the Philippines Inc. (PARTNER)",
+      "name": "Institute of Computer Engineer of the Philippines Inc. (ICpEP Inc.)",
       "description": "Professional body, or technology industry leader"
     },
     "partner_1791920199106": {
+      "customUrl": "./images/slot_partner_1791920199106.webp",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
@@ -1434,10 +1483,11 @@
         "zoom": 100,
         "objectFit": "contain"
       },
-      "name": "Philippine Technological Council - MENA Oman (PARTNER)",
-      "description": "Professional Accreditation and Engineering mobilization. "
+      "name": "Philippine Technological Council - MENA Oman",
+      "description": "Professional Accreditation and Engineering mobilization."
     },
     "partner_4": {
+      "customUrl": "./images/slot_partner_4.webp",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
@@ -1450,6 +1500,7 @@
       "description": "The Umbrella Organization of 13 PRC-Accredited Engineering Disciplines"
     },
     "partner_5": {
+      "customUrl": "./images/slot_partner_5.webp",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
@@ -1462,6 +1513,7 @@
       "description": "Global Skills-to-Jobs Education Program"
     },
     "partner_6": {
+      "customUrl": "./images/slot_partner_6.webp",
       "adjustments": {
         "brightness": 100,
         "contrast": 100,
@@ -1470,7 +1522,7 @@
         "zoom": 100,
         "objectFit": "contain"
       },
-      "name": "IEEE Oman Section (IEEE Oman) (IEEE Oman)",
+      "name": "IEEE Oman Section (IEEE Oman)",
       "description": "Institute of Electrical and Electronics Engineers — Sultanate of Oman"
     }
   }

@@ -173,6 +173,90 @@ app.post('/api/save-image', (req, res) => {
   }
 });
 
+// GitHub Delivery endpoint: commits and pushes site_state.json directly to GitHub repository
+app.post('/api/github-sync', async (req, res) => {
+  try {
+    const { owner, repo, branch = 'main', token, siteState, commitMessage } = req.body;
+    if (!owner || !repo || !token) {
+      return res.status(400).json({ success: false, error: 'owner, repo, and token are required for GitHub sync' });
+    }
+
+    // 1. First ensure disk state file is written
+    if (siteState && typeof siteState === 'object') {
+      const dataDir = path.dirname(DATA_FILE);
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+      fs.writeFileSync(DATA_FILE, JSON.stringify(siteState, null, 2), 'utf-8');
+    }
+
+    const cleanOwner = String(owner).trim();
+    const cleanRepo = String(repo).trim();
+    const cleanBranch = String(branch).trim();
+    const cleanToken = String(token).trim();
+    const targetPath = 'src/data/site_state.json';
+
+    // 2. Fetch existing file SHA
+    let existingSha: string | undefined;
+    const getRes = await fetch(`https://api.github.com/repos/${cleanOwner}/${cleanRepo}/contents/${targetPath}?ref=${cleanBranch}`, {
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        Authorization: `Bearer ${cleanToken}`
+      }
+    });
+
+    if (getRes.ok) {
+      const existing = (await getRes.json()) as any;
+      existingSha = existing.sha;
+    }
+
+    // 3. Encode site_state.json content
+    const contentStr = fs.existsSync(DATA_FILE)
+      ? fs.readFileSync(DATA_FILE, 'utf-8')
+      : JSON.stringify(siteState || {}, null, 2);
+    const base64Content = Buffer.from(contentStr, 'utf-8').toString('base64');
+
+    const nowStr = new Date().toLocaleString();
+    const msg = commitMessage || `Update conference site state from Admin Control Panel [${nowStr}]`;
+
+    // 4. PUT file to GitHub Contents API
+    const putRes = await fetch(`https://api.github.com/repos/${cleanOwner}/${cleanRepo}/contents/${targetPath}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/vnd.github.v3+json',
+        Authorization: `Bearer ${cleanToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: msg,
+        content: base64Content,
+        sha: existingSha,
+        branch: cleanBranch
+      })
+    });
+
+    if (!putRes.ok) {
+      const errData = (await putRes.json().catch(() => ({}))) as any;
+      const detail = errData.message || `HTTP ${putRes.status} ${putRes.statusText}`;
+      return res.status(putRes.status).json({ success: false, error: detail });
+    }
+
+    const putData = (await putRes.json()) as any;
+    const commitSha = putData.commit?.sha || putData.content?.sha;
+    const commitUrl = putData.commit?.html_url || `https://github.com/${cleanOwner}/${cleanRepo}/commit/${commitSha}`;
+
+    return res.json({
+      success: true,
+      message: `Successfully delivered changes to GitHub repository ${cleanOwner}/${cleanRepo}! Deployment triggered.`,
+      commitUrl,
+      sha: commitSha
+    });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    return res.status(500).json({ success: false, error: errorMessage });
+  }
+});
+
 // GET list of images in src/assets/images/
 app.get('/api/list-images', (_req, res) => {
   try {

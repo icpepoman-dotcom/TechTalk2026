@@ -22,6 +22,7 @@ import { useImageManager } from '../context/ImageContext';
 import { useEventData } from '../context/EventDataContext';
 import { compressImage } from '../utils/imageCompressor';
 import { downloadAllImagesZip } from '../utils/imagePath';
+import { getPartnerSlotId } from '../utils/collaboratorUtils';
 
 export const ImageEditorPanel: React.FC = () => {
   const {
@@ -90,7 +91,7 @@ export const ImageEditorPanel: React.FC = () => {
     }
   }, [currentSlotId, currentSlot?.name, currentSlot?.description]);
 
-  if (!isEditorOpen || !isAdminLoggedIn) return null;
+  if (!isEditorOpen) return null;
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -120,6 +121,16 @@ export const ImageEditorPanel: React.FC = () => {
           }
         }
 
+        // Keep matching collaborating org in sync if slot is a partner
+        if (currentSlot.category === 'partners') {
+          const orgIdx = collaboratingOrgs.findIndex((org, idx) => getPartnerSlotId(org, idx) === currentSlotId);
+          if (orgIdx !== -1) {
+            const updated = [...collaboratingOrgs];
+            updated[orgIdx] = { ...updated[orgIdx], logo: compressedUrl };
+            updateCollaboratingOrgs(updated);
+          }
+        }
+
         setUrlInput('');
         showToast(`Image uploaded & optimized for ${currentSlot.name}!`);
       })
@@ -130,6 +141,14 @@ export const ImageEditorPanel: React.FC = () => {
           const dataUrl = event.target?.result as string;
           if (dataUrl) {
             updateSlotUrl(currentSlotId, dataUrl);
+            if (currentSlot.category === 'partners') {
+              const orgIdx = collaboratingOrgs.findIndex((org, idx) => getPartnerSlotId(org, idx) === currentSlotId);
+              if (orgIdx !== -1) {
+                const updated = [...collaboratingOrgs];
+                updated[orgIdx] = { ...updated[orgIdx], logo: dataUrl };
+                updateCollaboratingOrgs(updated);
+              }
+            }
             setUrlInput('');
             showToast(`Image uploaded for ${currentSlot.name}!`);
           }
@@ -143,7 +162,18 @@ export const ImageEditorPanel: React.FC = () => {
   const handleApplyUrl = (e: React.FormEvent) => {
     e.preventDefault();
     if (!urlInput.trim()) return;
-    updateSlotUrl(currentSlotId, urlInput.trim());
+    const targetUrl = urlInput.trim();
+    updateSlotUrl(currentSlotId, targetUrl);
+
+    if (currentSlot.category === 'partners') {
+      const orgIdx = collaboratingOrgs.findIndex((org, idx) => getPartnerSlotId(org, idx) === currentSlotId);
+      if (orgIdx !== -1) {
+        const updated = [...collaboratingOrgs];
+        updated[orgIdx] = { ...updated[orgIdx], logo: targetUrl };
+        updateCollaboratingOrgs(updated);
+      }
+    }
+
     showToast(`Image URL applied for ${currentSlot.name}!`);
   };
 
@@ -249,9 +279,8 @@ export const ImageEditorPanel: React.FC = () => {
 
     // Also sync to eventData collaboratingOrgs if matching partner id
     if (currentSlot.category === 'partners') {
-      const defaultPartnerSlotIds = ['partner_ptc', 'partner_utas', 'partner_ieee', 'partner_cisco'];
       const orgIdx = collaboratingOrgs.findIndex((org, idx) => {
-        const slotId = org.id || defaultPartnerSlotIds[idx] || `partner_${idx}`;
+        const slotId = getPartnerSlotId(org, idx);
         return slotId === currentSlot.id;
       });
       if (orgIdx !== -1) {
@@ -270,7 +299,7 @@ export const ImageEditorPanel: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-[#040c1a]/85 backdrop-blur-md flex justify-end animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[70] overflow-hidden bg-[#040c1a]/85 backdrop-blur-md flex justify-end animate-in fade-in duration-200">
       {/* Slide-Over Drawer Container */}
       <div className="relative w-full max-w-2xl bg-[#0a1b35] border-l-2 border-[#e5b94c] shadow-2xl flex flex-col h-full text-slate-100">
         {/* Drawer Header */}

@@ -21,12 +21,17 @@ import {
   ChevronsRight,
   Copy,
   ExternalLink,
-  Award
+  Award,
+  Upload,
+  Camera,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useEventData } from '../context/EventDataContext';
 import { useImageManager } from '../context/ImageContext';
 import { CollaboratingOrg } from '../types';
 import { COLLABORATING_ORGS as DEFAULT_ORGS } from '../data/eventData';
+import { getPartnerSlotId, resolvePartnerLogo } from '../utils/collaboratorUtils';
+import { compressImage } from '../utils/imageCompressor';
 
 interface CollaboratorsTextModalProps {
   isOpen: boolean;
@@ -42,7 +47,7 @@ export const CollaboratorsTextModal: React.FC<CollaboratorsTextModalProps> = ({
   initialTab = 'arrange'
 }) => {
   const { collaboratingOrgs, updateCollaboratingOrgs, saveToServer } = useEventData();
-  const { openEditor, getImageUrl } = useImageManager();
+  const { openEditor, getImageUrl, updateSlotUrl } = useImageManager();
   const [orgs, setOrgs] = useState<CollaboratingOrg[]>([]);
   const [activeIdx, setActiveIdx] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<'arrange' | 'edit'>('arrange');
@@ -263,8 +268,8 @@ export const CollaboratorsTextModal: React.FC<CollaboratorsTextModalProps> = ({
               {/* Order List */}
               <div className="space-y-3">
                 {orgs.map((o, idx) => {
-                  const slotId = o.id || defaultPartnerSlotIds[idx] || `partner_${idx}`;
-                  const logoImg = getImageUrl(slotId);
+                  const slotId = getPartnerSlotId(o, idx);
+                  const logoImg = resolvePartnerLogo(o, slotId, getImageUrl);
 
                   return (
                     <div
@@ -681,6 +686,112 @@ export const CollaboratorsTextModal: React.FC<CollaboratorsTextModalProps> = ({
                         When provided, an interactive portal badge appears on the partner card for attendees to explore their official site.
                       </p>
                     </div>
+
+                    {/* Partner Logo & Media Controls */}
+                    <div className="p-3.5 rounded-xl bg-[#071326] border border-[#e5b94c]/30 space-y-3 shadow-inner">
+                      {(() => {
+                        const slotId = getPartnerSlotId(currentOrg, activeIdx);
+                        const currentLogo = resolvePartnerLogo(currentOrg, slotId, getImageUrl);
+
+                        return (
+                          <>
+                            <div className="flex items-center justify-between">
+                              <label className="block text-[11px] font-bold text-[#e5b94c] uppercase tracking-wider">
+                                Partner Logo & Emblem
+                              </label>
+                              <span className="text-[10px] font-mono text-slate-400">Slot: {slotId}</span>
+                            </div>
+
+                            <input
+                              type="file"
+                              id={`modal-collab-file-${slotId}`}
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                compressImage(file, { maxWidth: 800, maxHeight: 800, quality: 0.85 })
+                                  .then((compressed) => {
+                                    handleUpdateCurrentField('logo', compressed);
+                                    updateSlotUrl(slotId, compressed);
+                                  })
+                                  .catch(() => {
+                                    const reader = new FileReader();
+                                    reader.onload = (evt) => {
+                                      const dataUrl = evt.target?.result as string;
+                                      if (dataUrl) {
+                                        handleUpdateCurrentField('logo', dataUrl);
+                                        updateSlotUrl(slotId, dataUrl);
+                                      }
+                                    };
+                                    reader.readAsDataURL(file);
+                                  });
+                                e.target.value = '';
+                              }}
+                            />
+
+                            <div className="flex items-center gap-3">
+                              <div className="w-14 h-14 rounded-xl bg-[#0a1b35] border border-[#e5b94c]/40 shrink-0 overflow-hidden flex items-center justify-center p-1 shadow-inner">
+                                {currentLogo ? (
+                                  <img src={currentLogo} alt="" className="max-w-full max-h-full object-contain filter drop-shadow" />
+                                ) : (
+                                  <Building2 className="w-6 h-6 text-[#e5b94c]/50" />
+                                )}
+                              </div>
+
+                              <div className="flex-1 space-y-2 min-w-0">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={() => document.getElementById(`modal-collab-file-${slotId}`)?.click()}
+                                    className="px-3 py-1.5 rounded-lg bg-[#e5b94c] text-[#071326] font-bold text-xs flex items-center gap-1.5 hover:brightness-110 cursor-pointer shadow-sm transition-transform"
+                                  >
+                                    <Upload className="w-3.5 h-3.5" />
+                                    <span>Upload Logo File</span>
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      onClose();
+                                      openEditor(slotId);
+                                    }}
+                                    className="px-2.5 py-1.5 rounded-lg bg-[#0f2448] text-[#fcedbe] hover:bg-[#163363] border border-[#e5b94c]/40 font-semibold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm"
+                                  >
+                                    <Sliders className="w-3.5 h-3.5 text-[#e5b94c]" />
+                                    <span>Media Studio</span>
+                                  </button>
+
+                                  {currentLogo && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        handleUpdateCurrentField('logo', '');
+                                        updateSlotUrl(slotId, '');
+                                      }}
+                                      className="px-2 py-1 rounded bg-red-950/40 text-red-300 hover:text-white border border-red-500/30 text-xs cursor-pointer"
+                                    >
+                                      Clear
+                                    </button>
+                                  )}
+                                </div>
+
+                                <input
+                                  type="text"
+                                  placeholder="Or paste Direct Image URL (e.g. ./images/logo.png)..."
+                                  value={currentOrg.logo || ''}
+                                  onChange={(e) => {
+                                    handleUpdateCurrentField('logo', e.target.value);
+                                    updateSlotUrl(slotId, e.target.value);
+                                  }}
+                                  className="w-full px-2.5 py-1 bg-[#0a1b35] border border-[#e5b94c]/30 rounded text-slate-100 text-xs font-mono focus:outline-none focus:border-[#e5b94c]"
+                                />
+                              </div>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
                   </div>
 
                   {/* Right Column: Live Card Preview */}
@@ -696,8 +807,8 @@ export const CollaboratorsTextModal: React.FC<CollaboratorsTextModalProps> = ({
 
                         <div>
                           {(() => {
-                            const slotId = currentOrg.id || defaultPartnerSlotIds[activeIdx] || `partner_${activeIdx}`;
-                            const currentLogo = getImageUrl(slotId);
+                            const slotId = getPartnerSlotId(currentOrg, activeIdx);
+                            const currentLogo = resolvePartnerLogo(currentOrg, slotId, getImageUrl);
 
                             return (
                               <>
@@ -736,11 +847,10 @@ export const CollaboratorsTextModal: React.FC<CollaboratorsTextModalProps> = ({
                                 {/* Enlarged Logo Showcase Box in Preview */}
                                 <div
                                   onClick={() => {
-                                    onClose();
-                                    openEditor(slotId);
+                                    document.getElementById(`modal-collab-file-${slotId}`)?.click();
                                   }}
                                   className="w-full h-28 rounded-xl bg-gradient-to-b from-[#0f2448] to-[#071326] border border-[#e5b94c]/30 hover:border-[#e5b94c]/70 flex items-center justify-center p-3 mb-3.5 text-[#fcedbe] cursor-pointer transition-colors shadow-inner"
-                                  title="Click to customize this partner's logo in Media Studio"
+                                  title="Click to upload/change this partner's logo"
                                 >
                                   {currentLogo ? (
                                     <img

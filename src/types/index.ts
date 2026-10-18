@@ -87,4 +87,6 @@ export interface CollaboratingOrg {
   role: string;
   accreditations?: string[];
   websiteUrl?: string;
+  logo?: string;
+  logoUrl?: string;
 }

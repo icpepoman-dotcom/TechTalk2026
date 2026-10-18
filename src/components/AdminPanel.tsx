@@ -31,13 +31,29 @@ import {
   ArrowUp,
   ArrowDown,
   Camera,
-  QrCode
+  QrCode,
+  GitBranch,
+  GitPullRequest,
+  RefreshCw,
+  Eye,
+  EyeOff,
+  Terminal,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useEventData } from '../context/EventDataContext';
 import { useImageManager } from '../context/ImageContext';
 import { ScheduleItem, Speaker, ShortCourse, RegistrationTier, CollaboratingOrg } from '../types';
 import { COLLABORATING_ORGS as DEFAULT_ORGS } from '../data/eventData';
 import { compressImage } from '../utils/imageCompressor';
+import { getPartnerSlotId, resolvePartnerLogo } from '../utils/collaboratorUtils';
+import {
+  getGitHubConfig,
+  saveGitHubConfig,
+  testGitHubConnection,
+  deliverToGitHub,
+  GitHubConfig
+} from '../utils/githubSync';
+import { downloadFile } from '../utils/imagePath';
 
 export const AdminPanel: React.FC = () => {
   const {
@@ -112,11 +128,83 @@ export const AdminPanel: React.FC = () => {
     | 'venue'
     | 'partners'
     | 'attendees'
+    | 'github'
     | 'backup'
   >('dashboard');
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [confirmReset, setConfirmReset] = useState(false);
+
+  // GitHub Cloud Sync & Delivery states
+  const [githubConfig, setGithubConfig] = useState<GitHubConfig>(() => getGitHubConfig());
+  const [isGitHubModalOpen, setIsGitHubModalOpen] = useState(false);
+  const [isGitHubSyncing, setIsGitHubSyncing] = useState(false);
+  const [isTestingGitHub, setIsTestingGitHub] = useState(false);
+  const [githubTestResult, setGithubTestResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [showTokenPassword, setShowTokenPassword] = useState(false);
+  const [lastDeliveredInfo, setLastDeliveredInfo] = useState<{ time: string; sha?: string; url?: string } | null>(null);
+
+  const handleDeliverToGitHub = async (showSuccessToast = true): Promise<{ success: boolean; message: string; sha?: string; commitUrl?: string }> => {
+    setIsGitHubSyncing(true);
+    try {
+      const fullBundle = JSON.parse(exportFullSiteData(getExportableImagesData?.()));
+      const res = await deliverToGitHub({
+        siteState: fullBundle,
+        customImages: getExportableImagesData?.()
+      });
+      if (res.success) {
+        setGithubConfig(getGitHubConfig());
+        setLastDeliveredInfo({
+          time: new Date().toLocaleTimeString(),
+          sha: res.sha,
+          url: res.commitUrl
+        });
+        if (showSuccessToast) {
+          showToast(`⚡ Delivered to GitHub! Commit ${res.sha ? res.sha.slice(0, 7) : ''} deployed.`);
+        }
+      } else {
+        if (showSuccessToast) {
+          showToast(`GitHub sync note: ${res.message}`);
+        }
+      }
+      return res;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      if (showSuccessToast) {
+        showToast(`GitHub delivery error: ${msg}`);
+      }
+      return { success: false, message: msg };
+    } finally {
+      setIsGitHubSyncing(false);
+    }
+  };
+
+  const handleTestGitHubConnection = async () => {
+    setIsTestingGitHub(true);
+    setGithubTestResult(null);
+    try {
+      const res = await testGitHubConnection(githubConfig);
+      setGithubTestResult(res);
+      if (res.success) {
+        saveGitHubConfig(githubConfig);
+        showToast('✅ GitHub repository connection verified!');
+      } else {
+        showToast(`Connection failed: ${res.message}`);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setGithubTestResult({ success: false, message: msg });
+      showToast(`Connection error: ${msg}`);
+    } finally {
+      setIsTestingGitHub(false);
+    }
+  };
+
+  const updateConfigField = <K extends keyof GitHubConfig>(key: K, val: GitHubConfig[K]) => {
+    const updated = { ...githubConfig, [key]: val };
+    setGithubConfig(updated);
+    saveGitHubConfig(updated);
+  };
 
   // Editing state for schedules
   const [selectedDayNum, setSelectedDayNum] = useState<number>(1);
@@ -294,21 +382,40 @@ export const AdminPanel: React.FC = () => {
 
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setIsGitHubModalOpen(true)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0f2448] hover:bg-[#163363] text-xs font-semibold text-[#fcedbe] rounded-lg border border-[#e5b94c]/40 cursor-pointer shadow-sm transition-all"
+              title="Deliver changes to GitHub repository or configure auto-sync"
+            >
+              <GitBranch className="w-3.5 h-3.5 text-[#e5b94c]" />
+              <span className="hidden sm:inline">GitHub:</span>
+              <span className="font-mono text-emerald-400 text-[11px]">
+                {githubConfig.owner ? `${githubConfig.owner}/${githubConfig.repo}` : 'Connect'}
+              </span>
+            </button>
+
+            <button
               onClick={async () => {
                 const images = getExportableImagesData?.();
                 const res = await saveToServer(images);
+                let ghMsg = '';
+                if (githubConfig.autoSync && githubConfig.token && githubConfig.owner) {
+                  const ghRes = await handleDeliverToGitHub(false);
+                  if (ghRes.success) {
+                    ghMsg = ` & delivered to GitHub (${ghRes.sha ? ghRes.sha.slice(0, 7) : ''})!`;
+                  }
+                }
                 if (res.success) {
-                  showToast('✅ Saved & Published to Server! All visitors now see your updates.');
+                  showToast(`✅ Saved & Published to Server${ghMsg}`);
                 } else {
-                  showToast(`Saved locally: ${res.message}`);
+                  showToast(`Saved locally: ${res.message}${ghMsg}`);
                 }
               }}
-              disabled={isServerSaving}
+              disabled={isServerSaving || isGitHubSyncing}
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-xs font-bold text-white rounded-lg shadow-md cursor-pointer disabled:opacity-50 transition-all"
-              title="Publish updates to server so all visitors on the published site see them"
+              title="Publish updates to server and deliver to GitHub"
             >
               <Save className="w-3.5 h-3.5" />
-              <span>{isServerSaving ? 'Publishing...' : 'Save & Publish Live'}</span>
+              <span>{isServerSaving || isGitHubSyncing ? 'Publishing...' : 'Save & Publish Live'}</span>
             </button>
 
             <button
@@ -393,6 +500,7 @@ export const AdminPanel: React.FC = () => {
             { id: 'venue', label: 'Venue & Hotel', icon: <MapPin className="w-3.5 h-3.5" /> },
             { id: 'partners', label: 'Collaborators', icon: <Building className="w-3.5 h-3.5" /> },
             { id: 'attendees', label: `Attendees (${attendees.length})`, icon: <Users className="w-3.5 h-3.5" /> },
+            { id: 'github', label: 'GitHub Cloud Sync', icon: <GitBranch className="w-3.5 h-3.5 text-[#e5b94c]" /> },
             { id: 'backup', label: 'Backup & Reset', icon: <Download className="w-3.5 h-3.5" /> }
           ].map((tab) => (
             <button
@@ -2045,31 +2153,60 @@ export const AdminPanel: React.FC = () => {
 
               <div className="space-y-4">
                 {collaboratingOrgs.map((org, oIdx) => {
-                  const defaultSlotMap: Record<number, string> = {
-                    0: 'partner_ptc',
-                    1: 'partner_utas',
-                    2: 'partner_ieee',
-                    3: 'partner_cisco'
-                  };
-                  const slotId = org.id || defaultSlotMap[oIdx] || `partner_${oIdx}`;
-                  const partnerLogo = getImageUrl(slotId);
+                  const slotId = getPartnerSlotId(org, oIdx);
+                  const partnerLogo = resolvePartnerLogo(org, slotId, getImageUrl);
 
                   return (
                     <div
-                      key={org.id || oIdx}
-                      className="p-4 rounded-xl bg-[#071326] border border-[#e5b94c]/25 space-y-3 shadow-md"
+                      key={org.id || slotId || oIdx}
+                      className="p-4 rounded-xl bg-[#071326] border border-[#e5b94c]/25 space-y-3.5 shadow-md"
                     >
+                      {/* Hidden file input for fast 1-click logo upload */}
+                      <input
+                        type="file"
+                        id={`admin-collab-file-${slotId}`}
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          compressImage(file, { maxWidth: 800, maxHeight: 800, quality: 0.85 })
+                            .then((compressed) => {
+                              const updated = [...collaboratingOrgs];
+                              updated[oIdx] = { ...updated[oIdx], logo: compressed };
+                              updateCollaboratingOrgs(updated);
+                              updateSlotUrl(slotId, compressed);
+                              showToast(`Uploaded & updated logo for ${org.shortName || org.name}`);
+                            })
+                            .catch(() => {
+                              const reader = new FileReader();
+                              reader.onload = (evt) => {
+                                const dataUrl = evt.target?.result as string;
+                                if (dataUrl) {
+                                  const updated = [...collaboratingOrgs];
+                                  updated[oIdx] = { ...updated[oIdx], logo: dataUrl };
+                                  updateCollaboratingOrgs(updated);
+                                  updateSlotUrl(slotId, dataUrl);
+                                  showToast(`Uploaded logo for ${org.shortName || org.name}`);
+                                }
+                              };
+                              reader.readAsDataURL(file);
+                            });
+                          e.target.value = '';
+                        }}
+                      />
+
                       <div className="flex items-center justify-between border-b border-[#e5b94c]/15 pb-2 flex-wrap gap-2">
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] font-mono font-bold text-[#e5b94c] bg-[#0a1b35] px-2 py-0.5 rounded border border-[#e5b94c]/20">
                             #{oIdx + 1}
                           </span>
                           {partnerLogo ? (
-                            <div className="w-6 h-6 rounded bg-[#0a1b35] border border-[#e5b94c]/30 overflow-hidden flex items-center justify-center p-0.5">
+                            <div className="w-7 h-7 rounded bg-[#0a1b35] border border-[#e5b94c]/30 overflow-hidden flex items-center justify-center p-0.5">
                               <img src={partnerLogo} alt="" className="w-full h-full object-contain" />
                             </div>
                           ) : (
-                            <Building className="w-4 h-4 text-[#e5b94c]/60" />
+                            <Building className="w-5 h-5 text-[#e5b94c]/60" />
                           )}
                           <span className="font-bold text-slate-200">
                             {org.name || 'Untitled Organization'}
@@ -2112,12 +2249,22 @@ export const AdminPanel: React.FC = () => {
 
                           <button
                             type="button"
+                            onClick={() => document.getElementById(`admin-collab-file-${slotId}`)?.click()}
+                            className="px-2.5 py-1 text-[11px] bg-[#e5b94c] text-[#071326] font-bold rounded flex items-center gap-1 cursor-pointer hover:brightness-110 shadow-sm"
+                            title="Quick upload picture from device"
+                          >
+                            <Upload className="w-3 h-3" />
+                            <span>Upload</span>
+                          </button>
+
+                          <button
+                            type="button"
                             onClick={() => openEditor(slotId)}
                             className="px-2 py-1 text-[11px] text-[#fcedbe] hover:text-white bg-[#0f2448] hover:bg-[#163363] border border-[#e5b94c]/40 rounded flex items-center gap-1 cursor-pointer transition-colors"
                             title="Upload or change logo in Media Studio"
                           >
                             <Sliders className="w-3 h-3 text-[#e5b94c]" />
-                            <span>Edit Logo</span>
+                            <span>Media Studio</span>
                           </button>
 
                           {collaboratingOrgs.length > 1 && (
@@ -2134,6 +2281,80 @@ export const AdminPanel: React.FC = () => {
                               <span>Delete</span>
                             </button>
                           )}
+                        </div>
+                      </div>
+
+                      {/* Direct Logo & Media Controls Box */}
+                      <div className="p-3 rounded-lg bg-[#040c1a] border border-[#e5b94c]/25 space-y-2.5 shadow-inner">
+                        <div className="flex items-center justify-between">
+                          <label className="text-[11px] font-bold text-[#e5b94c] uppercase tracking-wider flex items-center gap-1.5">
+                            <ImageIcon className="w-3.5 h-3.5" />
+                            <span>Collaborator Logo & Insignia</span>
+                          </label>
+                          <span className="text-[10px] font-mono text-slate-400">Slot: {slotId}</span>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                          <div className="w-16 h-14 rounded-lg bg-[#0a1b35] border border-[#e5b94c]/40 shrink-0 overflow-hidden flex items-center justify-center p-1 shadow-inner">
+                            {partnerLogo ? (
+                              <img src={partnerLogo} alt="" className="max-w-full max-h-full object-contain filter drop-shadow" />
+                            ) : (
+                              <Building className="w-6 h-6 text-[#e5b94c]/50" />
+                            )}
+                          </div>
+
+                          <div className="flex-1 space-y-2 w-full min-w-0">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => document.getElementById(`admin-collab-file-${slotId}`)?.click()}
+                                className="px-3 py-1.5 bg-[#e5b94c] text-[#071326] font-bold text-xs rounded flex items-center gap-1.5 hover:brightness-110 cursor-pointer shadow-sm transition-transform"
+                              >
+                                <Upload className="w-3.5 h-3.5" />
+                                <span>Upload Logo Picture</span>
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => openEditor(slotId)}
+                                className="px-2.5 py-1.5 bg-[#0f2448] text-[#fcedbe] hover:bg-[#163363] border border-[#e5b94c]/40 text-xs font-semibold rounded flex items-center gap-1 cursor-pointer"
+                                title="Fine-tune zoom and color in Media Studio"
+                              >
+                                <Sliders className="w-3.5 h-3.5 text-[#e5b94c]" />
+                                <span>Media Studio</span>
+                              </button>
+
+                              {(org.logo || partnerLogo) && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = [...collaboratingOrgs];
+                                    updated[oIdx] = { ...updated[oIdx], logo: '' };
+                                    updateCollaboratingOrgs(updated);
+                                    updateSlotUrl(slotId, '');
+                                    showToast(`Cleared logo for ${org.shortName || org.name}`);
+                                  }}
+                                  className="px-2 py-1 bg-red-950/40 text-red-300 hover:text-white border border-red-500/30 text-xs rounded cursor-pointer"
+                                >
+                                  Clear
+                                </button>
+                              )}
+                            </div>
+
+                            <input
+                              type="text"
+                              value={org.logo || ''}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                const updated = [...collaboratingOrgs];
+                                updated[oIdx] = { ...updated[oIdx], logo: val };
+                                updateCollaboratingOrgs(updated);
+                                updateSlotUrl(slotId, val);
+                              }}
+                              placeholder="Or paste Direct Image URL/Path (e.g. ./images/logo.png)..."
+                              className="w-full px-2.5 py-1.5 bg-[#0a1b35] border border-[#e5b94c]/30 rounded text-slate-100 text-xs font-mono focus:outline-none focus:border-[#e5b94c]"
+                            />
+                          </div>
                         </div>
                       </div>
 
@@ -2382,22 +2603,42 @@ export const AdminPanel: React.FC = () => {
                     </div>
                   </div>
 
-                  <button
-                    onClick={async () => {
-                      const images = getExportableImagesData ? getExportableImagesData() : undefined;
-                      const res = await saveToServer(images);
-                      if (res.success) {
-                        showToast('✅ Website successfully published to server! All visitors will now see your updates.');
-                      } else {
-                        showToast(`Server sync notice: ${res.message}`);
-                      }
-                    }}
-                    disabled={isServerSaving}
-                    className="px-6 py-3 rounded-xl font-bold text-xs bg-gradient-to-r from-emerald-400 to-teal-400 text-[#071326] hover:brightness-110 shadow-lg transition-all cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 disabled:opacity-50"
-                  >
-                    <Save className="w-4 h-4 text-[#071326]" />
-                    <span>{isServerSaving ? 'Saving to Server...' : '💾 Save & Publish to All Visitors'}</span>
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={async () => {
+                        const images = getExportableImagesData ? getExportableImagesData() : undefined;
+                        const res = await saveToServer(images);
+                        let ghMsg = '';
+                        if (githubConfig.autoSync && githubConfig.token && githubConfig.owner) {
+                          const ghRes = await handleDeliverToGitHub(false);
+                          if (ghRes.success) {
+                            ghMsg = ` & delivered to GitHub (${ghRes.sha ? ghRes.sha.slice(0, 7) : ''})!`;
+                          }
+                        }
+                        if (res.success) {
+                          showToast(`✅ Website successfully published to server${ghMsg}! All visitors will now see your updates.`);
+                        } else {
+                          showToast(`Server sync notice: ${res.message}${ghMsg}`);
+                        }
+                      }}
+                      disabled={isServerSaving || isGitHubSyncing}
+                      className="px-5 py-2.5 rounded-xl font-bold text-xs bg-gradient-to-r from-emerald-400 to-teal-400 text-[#071326] hover:brightness-110 shadow-lg transition-all cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      <Save className="w-4 h-4 text-[#071326]" />
+                      <span>{isServerSaving || isGitHubSyncing ? 'Publishing...' : '💾 Save & Publish to All Visitors'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleDeliverToGitHub(true)}
+                      disabled={isGitHubSyncing || !githubConfig.owner.trim() || !githubConfig.token.trim()}
+                      className="px-4 py-2.5 rounded-xl font-bold text-xs bg-[#0f2448] text-[#fcedbe] hover:bg-[#163363] border border-[#e5b94c]/40 shadow-lg transition-all cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 disabled:opacity-50"
+                      title="Deliver immediately to GitHub repository"
+                    >
+                      <GitBranch className={`w-3.5 h-3.5 text-[#e5b94c] ${isGitHubSyncing ? 'animate-spin' : ''}`} />
+                      <span>{isGitHubSyncing ? 'Syncing...' : 'Deliver to GitHub'}</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Clear explanation of why published updates require server save */}
@@ -2606,6 +2847,314 @@ export const AdminPanel: React.FC = () => {
               </div>
             </div>
           )}
+
+          {/* 12. GITHUB CLOUD SYNC & AUTOMATED CI/CD TAB */}
+          {activeTab === 'github' && (
+            <div className="space-y-6">
+              <div className="border-b border-[#e5b94c]/20 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="font-cinzel text-base font-bold text-[#fcedbe] flex items-center gap-2">
+                    <GitBranch className="w-4 h-4 text-[#e5b94c]" />
+                    <span>GitHub Cloud Sync & Automated CI/CD Delivery</span>
+                  </h4>
+                  <p className="text-xs text-slate-400">
+                    Directly deliver Admin Panel updates to your GitHub repository (<code>TechTalk2026</code>) to automatically trigger GitHub Actions deployment to live GitHub Pages.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <a
+                    href={githubConfig.owner ? `https://github.com/${githubConfig.owner}/${githubConfig.repo}/actions` : 'https://github.com'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 rounded-lg bg-[#0f2448] text-[#fcedbe] hover:bg-[#163363] border border-[#e5b94c]/30 text-xs flex items-center gap-1.5 cursor-pointer shadow-sm transition-colors"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-[#e5b94c]" />
+                    <span>View GitHub Actions</span>
+                  </a>
+                </div>
+              </div>
+
+              {/* CARD 1: DELIVER TO GITHUB / DEPLOY TO LIVE SITE */}
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0c2349] via-[#081830] to-[#040d1a] border-2 border-[#e5b94c]/50 shadow-2xl space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#e5b94c]/20 pb-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-[10px] font-mono uppercase font-bold px-2 py-0.5 rounded bg-[#e5b94c] text-[#071326]">
+                        Automated Live Deploy
+                      </span>
+                      <span className="text-xs font-mono text-emerald-400 font-bold bg-[#071326] px-2 py-0.5 rounded border border-emerald-500/30">
+                        {githubConfig.owner ? `${githubConfig.owner}/${githubConfig.repo} : ${githubConfig.branch || 'main'}` : 'Not connected'}
+                      </span>
+                    </div>
+                    <h5 className="font-cinzel text-base font-bold text-slate-100 mt-1">
+                      Deliver Website State to GitHub Repository
+                    </h5>
+                    <p className="text-xs text-slate-300">
+                      Commits <code>src/data/site_state.json</code> and all customized images directly to GitHub. This triggers GitHub Pages automated deployment in <code>deploy.yml</code>.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDeliverToGitHub(true)}
+                    disabled={isGitHubSyncing || !githubConfig.owner.trim() || !githubConfig.token.trim()}
+                    className="px-6 py-3 rounded-xl font-bold text-xs bg-gradient-to-r from-[#fcedbe] via-[#e5b94c] to-[#c9982a] text-[#071326] hover:brightness-110 shadow-xl transition-all cursor-pointer whitespace-nowrap flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title={!githubConfig.token.trim() ? 'Please provide a GitHub Personal Access Token below' : 'Commit & push changes to GitHub'}
+                  >
+                    <RefreshCw className={`w-4 h-4 text-[#071326] ${isGitHubSyncing ? 'animate-spin' : ''}`} />
+                    <span>{isGitHubSyncing ? 'Delivering to GitHub...' : '⚡ Deliver to GitHub Now'}</span>
+                  </button>
+                </div>
+
+                {/* Auto-Sync Toggle & Status */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                  <div className="p-4 rounded-xl bg-[#071326]/90 border border-[#e5b94c]/25 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-[#fcedbe] flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5 text-[#e5b94c]" />
+                        <span>Auto-Deliver on Every Save</span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => updateConfigField('autoSync', !githubConfig.autoSync)}
+                        className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
+                          githubConfig.autoSync ? 'bg-emerald-500' : 'bg-slate-700'
+                        }`}
+                        title="Toggle automatic GitHub push on every Save & Publish click"
+                      >
+                        <div
+                          className={`w-5 h-5 rounded-full bg-white shadow-md absolute top-0.5 transition-transform ${
+                            githubConfig.autoSync ? 'right-0.5' : 'left-0.5'
+                          }`}
+                        />
+                      </button>
+                    </div>
+                    <p className="text-[11px] text-slate-300">
+                      When enabled, clicking <strong>"Save & Publish Live"</strong> automatically commits and pushes all changes to GitHub without any extra steps!
+                    </p>
+                  </div>
+
+                  <div className="p-4 rounded-xl bg-[#071326]/90 border border-[#e5b94c]/25 space-y-1.5 text-xs">
+                    <span className="font-bold text-[#fcedbe] block">Latest GitHub Delivery Status:</span>
+                    {lastDeliveredInfo || githubConfig.lastSyncTime ? (
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-emerald-400">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span>Last synced: {lastDeliveredInfo?.time || githubConfig.lastSyncTime}</span>
+                        </div>
+                        {(lastDeliveredInfo?.sha || githubConfig.lastCommitSha) && (
+                          <div className="flex items-center gap-2 text-slate-300">
+                            <span>Commit:</span>
+                            <a
+                              href={
+                                lastDeliveredInfo?.url ||
+                                `https://github.com/${githubConfig.owner}/${githubConfig.repo}/commit/${lastDeliveredInfo?.sha || githubConfig.lastCommitSha}`
+                              }
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="font-mono text-[#e5b94c] hover:underline flex items-center gap-1"
+                            >
+                              <code>{(lastDeliveredInfo?.sha || githubConfig.lastCommitSha)?.slice(0, 7)}</code>
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <p className="text-slate-400 text-[11px]">
+                        No commits delivered yet in this session. Configure token below and click "Deliver to GitHub Now".
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* CARD 2: GITHUB REPOSITORY & ACCESS TOKEN SETTINGS */}
+              <div className="p-5 rounded-2xl bg-[#071326] border border-[#e5b94c]/30 space-y-4">
+                <div className="flex items-center justify-between border-b border-[#e5b94c]/20 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-[#e5b94c]" />
+                    <h5 className="font-bold text-sm text-[#fcedbe]">
+                      GitHub Repository Credentials & Token
+                    </h5>
+                  </div>
+
+                  <a
+                    href="https://github.com/settings/tokens/new?scopes=repo&description=TechTalk2026-Admin-Panel"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2.5 py-1 rounded bg-[#0f2448] text-xs font-semibold text-[#fcedbe] hover:bg-[#163363] border border-[#e5b94c]/30 flex items-center gap-1.5 cursor-pointer shadow-sm"
+                    title="Generate a new GitHub Personal Access Token in your browser"
+                  >
+                    <ExternalLink className="w-3 h-3 text-[#e5b94c]" />
+                    <span>Generate GitHub Token (1-Click)</span>
+                  </a>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1 text-xs">
+                      GitHub Username / Org
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g. your-github-user"
+                      value={githubConfig.owner}
+                      onChange={(e) => updateConfigField('owner', e.target.value)}
+                      className="w-full px-3 py-2 bg-[#040d1a] border border-[#e5b94c]/30 rounded-lg text-slate-100 font-mono text-xs focus:outline-none focus:border-[#e5b94c]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1 text-xs">
+                      Repository Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="TechTalk2026"
+                      value={githubConfig.repo}
+                      onChange={(e) => updateConfigField('repo', e.target.value)}
+                      className="w-full px-3 py-2 bg-[#040d1a] border border-[#e5b94c]/30 rounded-lg text-slate-100 font-mono text-xs focus:outline-none focus:border-[#e5b94c]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1 text-xs">
+                      Target Branch
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="main"
+                      value={githubConfig.branch}
+                      onChange={(e) => updateConfigField('branch', e.target.value)}
+                      className="w-full px-3 py-2 bg-[#040d1a] border border-[#e5b94c]/30 rounded-lg text-slate-100 font-mono text-xs focus:outline-none focus:border-[#e5b94c]"
+                    />
+                  </div>
+                </div>
+
+                {/* Personal Access Token Input */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-slate-300 font-semibold text-xs flex items-center gap-1.5">
+                      <span>Personal Access Token (PAT)</span>
+                      <span className="text-[10px] text-amber-400 bg-amber-950/60 px-1.5 py-0.2 rounded border border-amber-500/30">
+                        Requires 'repo' scope
+                      </span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowTokenPassword(!showTokenPassword)}
+                      className="text-[11px] text-[#e5b94c] hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      {showTokenPassword ? (
+                        <>
+                          <EyeOff className="w-3 h-3" />
+                          <span>Hide Token</span>
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="w-3 h-3" />
+                          <span>Show Token</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="relative">
+                    <input
+                      type={showTokenPassword ? 'text' : 'password'}
+                      placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                      value={githubConfig.token}
+                      onChange={(e) => updateConfigField('token', e.target.value)}
+                      className="w-full px-3 py-2 bg-[#040d1a] border border-[#e5b94c]/30 rounded-lg text-slate-100 font-mono text-xs focus:outline-none focus:border-[#e5b94c]"
+                    />
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-1">
+                    Your token is stored safely in your browser's private local storage. It is used exclusively to commit site data directly to your GitHub repository.
+                  </p>
+                </div>
+
+                {/* Test Connection Button & Result */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={handleTestGitHubConnection}
+                    disabled={isTestingGitHub || !githubConfig.owner.trim() || !githubConfig.token.trim()}
+                    className="px-4 py-2 rounded-lg bg-[#0f2448] text-xs font-bold text-[#fcedbe] hover:bg-[#163363] border border-[#e5b94c]/40 flex items-center gap-2 cursor-pointer shadow-sm disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 text-[#e5b94c] ${isTestingGitHub ? 'animate-spin' : ''}`} />
+                    <span>{isTestingGitHub ? 'Testing Connection...' : 'Test Connection & Verify Token'}</span>
+                  </button>
+
+                  {githubTestResult && (
+                    <div
+                      className={`px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 ${
+                        githubTestResult.success
+                          ? 'bg-emerald-950/80 border border-emerald-500/40 text-emerald-200'
+                          : 'bg-red-950/80 border border-red-500/40 text-red-200'
+                      }`}
+                    >
+                      {githubTestResult.success ? (
+                        <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+                      ) : (
+                        <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                      )}
+                      <span>{githubTestResult.message}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* CARD 3: HOW GITHUB ACTIONS AUTOMATION WORKS */}
+              <div className="p-5 rounded-2xl bg-[#071326] border border-[#e5b94c]/20 space-y-3 text-xs text-slate-300">
+                <h5 className="font-bold text-sm text-[#fcedbe] flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-emerald-400" />
+                  <span>How Automated GitHub Delivery & Deployment Works</span>
+                </h5>
+                <ol className="list-decimal list-inside space-y-2 text-slate-300 leading-relaxed">
+                  <li>
+                    <strong>Edit Anywhere:</strong> Make changes to speakers, titles, partner logos, or schedule in this Admin Control Panel.
+                  </li>
+                  <li>
+                    <strong>Push to Repository:</strong> Click <em>"Deliver to GitHub Now"</em> (or leave <em>"Auto-Deliver"</em> on). Your update is committed to <code>src/data/site_state.json</code> in your GitHub repository.
+                  </li>
+                  <li>
+                    <strong>GitHub Actions Builds Automatically:</strong> Your repository workflow (<code>.github/workflows/deploy.yml</code>) triggers on push, builds the Vite production app, and publishes to GitHub Pages.
+                  </li>
+                  <li>
+                    <strong>Zero Terminal Required:</strong> Your website is now permanently synchronized with GitHub!
+                  </li>
+                </ol>
+              </div>
+
+              {/* CARD 4: TERMINAL COMMANDS FALLBACK */}
+              <div className="p-5 rounded-2xl bg-[#040d1a] border border-[#e5b94c]/25 space-y-3 text-xs">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 font-bold text-[#fcedbe]">
+                    <Terminal className="w-4 h-4 text-[#e5b94c]" />
+                    <span>Optional: Manual Terminal Git Commands</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText('git add src/data/site_state.json public/images/\ngit commit -m "Update conference site data from Admin Panel"\ngit push origin main');
+                      showToast('Copied git commands to clipboard!');
+                    }}
+                    className="px-2.5 py-1 rounded bg-[#0f2448] text-[11px] text-[#fcedbe] hover:bg-[#163363] border border-[#e5b94c]/30 cursor-pointer"
+                  >
+                    Copy Commands
+                  </button>
+                </div>
+                <p className="text-slate-400 text-[11px]">
+                  If you are working on a local cloned repository in VS Code or Terminal, you can also push changes manually:
+                </p>
+                <pre className="p-3 rounded-lg bg-[#071326] border border-[#e5b94c]/20 text-[#fcedbe] font-mono text-[11px] overflow-x-auto select-all">
+                  git add src/data/site_state.json public/images/&#10;git commit -m &quot;Update conference site data from Admin Panel&quot;&#10;git push origin main
+                </pre>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Panel Footer */}
@@ -2626,6 +3175,190 @@ export const AdminPanel: React.FC = () => {
           <div className="absolute top-16 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-full shadow-lg flex items-center gap-2 animate-in fade-in zoom-in-95 duration-150 z-50">
             <CheckCircle className="w-4 h-4" />
             <span>{toastMessage}</span>
+          </div>
+        )}
+        {/* GitHub Quick Sync Floating Modal */}
+        {isGitHubModalOpen && (
+          <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-150">
+            <div className="bg-[#071326] border-2 border-[#e5b94c]/60 rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+              {/* Modal Header */}
+              <div className="p-4 bg-gradient-to-r from-[#0c2349] to-[#071326] border-b border-[#e5b94c]/20 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-[#071326] border border-[#e5b94c]/30 text-[#e5b94c]">
+                    <GitBranch className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-cinzel text-sm font-bold text-[#fcedbe]">
+                      GitHub Cloud Delivery & Deployment
+                    </h4>
+                    <p className="text-[11px] text-slate-400">
+                      Sync site data directly to GitHub to trigger GitHub Pages live deployment
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setIsGitHubModalOpen(false)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-5 overflow-y-auto space-y-4 text-xs">
+                {/* Immediate Delivery Action */}
+                <div className="p-4 rounded-xl bg-gradient-to-br from-[#0c2349]/90 to-[#071326] border border-[#e5b94c]/40 space-y-3">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <span className="font-bold text-[#fcedbe]">Immediate Action</span>
+                    <span className="text-[11px] font-mono text-emerald-400 bg-[#071326] px-2 py-0.5 rounded border border-emerald-500/30">
+                      {githubConfig.owner ? `${githubConfig.owner}/${githubConfig.repo}` : 'Not Connected'}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleDeliverToGitHub(true)}
+                    disabled={isGitHubSyncing || !githubConfig.owner.trim() || !githubConfig.token.trim()}
+                    className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-[#fcedbe] via-[#e5b94c] to-[#c9982a] text-[#071326] hover:brightness-110 shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isGitHubSyncing ? 'animate-spin' : ''}`} />
+                    <span>{isGitHubSyncing ? 'Delivering to GitHub...' : '⚡ Deliver Changes to GitHub Now'}</span>
+                  </button>
+
+                  <div className="flex items-center justify-between pt-1 border-t border-[#e5b94c]/15">
+                    <span className="text-slate-300 text-[11px]">Auto-deliver on every "Save & Publish"</span>
+                    <button
+                      type="button"
+                      onClick={() => updateConfigField('autoSync', !githubConfig.autoSync)}
+                      className={`w-10 h-5 rounded-full transition-colors relative cursor-pointer ${
+                        githubConfig.autoSync ? 'bg-emerald-500' : 'bg-slate-700'
+                      }`}
+                    >
+                      <div
+                        className={`w-4 h-4 rounded-full bg-white shadow absolute top-0.5 transition-transform ${
+                          githubConfig.autoSync ? 'right-0.5' : 'left-0.5'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Configuration Inputs */}
+                <div className="space-y-3 p-4 rounded-xl bg-[#040d1a] border border-[#e5b94c]/20">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-[#fcedbe]">Repository Configuration</span>
+                    <a
+                      href="https://github.com/settings/tokens/new?scopes=repo&description=TechTalk2026-Admin-Panel"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-[#e5b94c] hover:underline flex items-center gap-1"
+                    >
+                      <span>Get GitHub Token</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="text-[11px] text-slate-300 font-semibold block mb-1">Owner / Username</label>
+                      <input
+                        type="text"
+                        placeholder="your-github-username"
+                        value={githubConfig.owner}
+                        onChange={(e) => updateConfigField('owner', e.target.value)}
+                        className="w-full px-2.5 py-1.5 bg-[#071326] border border-[#e5b94c]/30 rounded text-slate-100 font-mono text-xs focus:outline-none focus:border-[#e5b94c]"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] text-slate-300 font-semibold block mb-1">Repository Name</label>
+                      <input
+                        type="text"
+                        placeholder="TechTalk2026"
+                        value={githubConfig.repo}
+                        onChange={(e) => updateConfigField('repo', e.target.value)}
+                        className="w-full px-2.5 py-1.5 bg-[#071326] border border-[#e5b94c]/30 rounded text-slate-100 font-mono text-xs focus:outline-none focus:border-[#e5b94c]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="text-[11px] text-slate-300 font-semibold">Personal Access Token (PAT)</label>
+                      <button
+                        type="button"
+                        onClick={() => setShowTokenPassword(!showTokenPassword)}
+                        className="text-[10px] text-[#e5b94c] hover:underline"
+                      >
+                        {showTokenPassword ? 'Hide' : 'Show'}
+                      </button>
+                    </div>
+                    <input
+                      type={showTokenPassword ? 'text' : 'password'}
+                      placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+                      value={githubConfig.token}
+                      onChange={(e) => updateConfigField('token', e.target.value)}
+                      className="w-full px-2.5 py-1.5 bg-[#071326] border border-[#e5b94c]/30 rounded text-slate-100 font-mono text-xs focus:outline-none focus:border-[#e5b94c]"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <button
+                      type="button"
+                      onClick={handleTestGitHubConnection}
+                      disabled={isTestingGitHub || !githubConfig.owner.trim() || !githubConfig.token.trim()}
+                      className="px-3 py-1.5 rounded bg-[#0f2448] text-[11px] font-bold text-[#fcedbe] hover:bg-[#163363] border border-[#e5b94c]/30 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    >
+                      <RefreshCw className={`w-3 h-3 ${isTestingGitHub ? 'animate-spin' : ''}`} />
+                      <span>{isTestingGitHub ? 'Testing...' : 'Test Connection'}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveTab('github');
+                        setIsGitHubModalOpen(false);
+                      }}
+                      className="text-[11px] text-[#e5b94c] hover:underline cursor-pointer"
+                    >
+                      Open Full GitHub Tab →
+                    </button>
+                  </div>
+
+                  {githubTestResult && (
+                    <div
+                      className={`p-2 rounded text-[11px] flex items-center gap-1.5 ${
+                        githubTestResult.success
+                          ? 'bg-emerald-950/80 border border-emerald-500/30 text-emerald-200'
+                          : 'bg-red-950/80 border border-red-500/30 text-red-200'
+                      }`}
+                    >
+                      {githubTestResult.success ? (
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      ) : (
+                        <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                      )}
+                      <span>{githubTestResult.message}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-3 bg-[#071326] border-t border-[#e5b94c]/20 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400">
+                  {githubConfig.lastSyncTime ? `Last sync: ${githubConfig.lastSyncTime}` : 'Token stored locally in browser'}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsGitHubModalOpen(false)}
+                  className="px-4 py-1.5 bg-[#0f2448] hover:bg-[#163363] text-slate-200 text-xs rounded-lg border border-[#e5b94c]/30 cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>

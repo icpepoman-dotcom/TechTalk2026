@@ -3,6 +3,7 @@ import { useEventData } from './EventDataContext';
 import { dbSetItem, dbGetItem, dbRemoveItem } from '../utils/storageDb';
 import { compressImage } from '../utils/imageCompressor';
 import { resolveImageUrl, syncImageToDisk } from '../utils/imagePath';
+import { getPartnerSlotId } from '../utils/collaboratorUtils';
 import siteState from '../data/site_state.json';
 
 // Default asset paths
@@ -681,36 +682,44 @@ export const ImageProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setSlots((prev) => {
       let hasChanges = false;
       const updated = { ...prev };
-      const defaultPartnerSlotIds = ['partner_ptc', 'partner_utas', 'partner_ieee', 'partner_cisco'];
       const activePartnerSlotIds = new Set<string>();
 
       collaboratingOrgs.forEach((org, idx) => {
-        const slotId = org.id || defaultPartnerSlotIds[idx] || `partner_${idx}`;
+        const slotId = getPartnerSlotId(org, idx);
         activePartnerSlotIds.add(slotId);
 
         const partnerName = org.name
           ? (org.shortName ? `${org.name} (${org.shortName})` : org.name)
           : `Collaborating Partner #${idx + 1}`;
         const partnerDesc = org.subtitle || org.role || `Institutional partner logo #${idx + 1}`;
+        const partnerLogo = org.logo || org.logoUrl || '';
 
         if (!updated[slotId]) {
           updated[slotId] = {
             id: slotId,
             name: partnerName,
             category: 'partners',
-            defaultUrl: '',
+            defaultUrl: partnerLogo,
+            customUrl: partnerLogo || undefined,
             aspectRatio: '1:1',
             description: partnerDesc,
             adjustments: { ...DEFAULT_ADJUSTMENTS, objectFit: 'contain' }
           };
           hasChanges = true;
         } else {
-          // If name or description changed, keep slot in sync
-          if (updated[slotId].name !== partnerName || updated[slotId].description !== partnerDesc) {
+          // Keep name, description, and logo in sync if updated
+          const shouldUpdateLogo = partnerLogo && !updated[slotId].customUrl && updated[slotId].defaultUrl !== partnerLogo;
+          if (
+            updated[slotId].name !== partnerName ||
+            updated[slotId].description !== partnerDesc ||
+            shouldUpdateLogo
+          ) {
             updated[slotId] = {
               ...updated[slotId],
               name: partnerName,
-              description: partnerDesc
+              description: partnerDesc,
+              defaultUrl: updated[slotId].defaultUrl || partnerLogo,
+              customUrl: updated[slotId].customUrl || partnerLogo || undefined
             };
             hasChanges = true;
           }

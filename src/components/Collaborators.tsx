@@ -13,16 +13,21 @@ import {
   Award,
   ArrowLeft,
   ArrowRight,
-  ArrowLeftRight
+  ArrowLeftRight,
+  Upload,
+  Camera
 } from 'lucide-react';
 import { useImageManager } from '../context/ImageContext';
 import { useEventData } from '../context/EventDataContext';
 import { CollaboratorsTextModal } from './CollaboratorsTextModal';
+import { getPartnerSlotId, resolvePartnerLogo } from '../utils/collaboratorUtils';
+import { compressImage } from '../utils/imageCompressor';
 
 export const Collaborators: React.FC = () => {
-  const { getImageUrl, getImageStyle, openEditor } = useImageManager();
+  const { getImageUrl, getImageStyle, openEditor, updateSlotUrl } = useImageManager();
   const { collaboratingOrgs, updateCollaboratingOrgs, globalPartnerships, isPublishMode, saveToServer } = useEventData();
   const [isTextModalOpen, setIsTextModalOpen] = useState(false);
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
   const [selectedOrgIdx, setSelectedOrgIdx] = useState(0);
   const [modalTab, setModalTab] = useState<'edit' | 'arrange'>('arrange');
 
@@ -190,15 +195,56 @@ export const Collaborators: React.FC = () => {
             }`}
           >
             {collaboratingOrgs.map((org, idx) => {
-              const slotId = org.id || partnerSlotMap[idx] || `partner_${idx}`;
-              const customLogo = getImageUrl(slotId);
+              const slotId = getPartnerSlotId(org, idx);
+              const customLogo = resolvePartnerLogo(org, slotId, getImageUrl);
               const customStyle = getImageStyle(slotId);
+              const hasLoadError = imageErrors[slotId];
+              const showLogo = customLogo && !hasLoadError;
 
               return (
                 <div
-                  key={org.id || idx}
+                  key={org.id || slotId || idx}
                   className="group relative rounded-2xl bg-gradient-to-b from-[#0c1f3d]/90 via-[#0a1b35]/85 to-[#071326] border border-[#e5b94c]/30 hover:border-[#e5b94c]/70 transition-all duration-300 flex flex-col justify-between shadow-xl hover:shadow-[0_8px_30px_rgba(229,185,76,0.12)] overflow-hidden"
                 >
+                  {/* Hidden file input for fast 1-click logo upload */}
+                  {!isPublishMode && (
+                    <input
+                      type="file"
+                      id={`collab-file-${slotId}`}
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        compressImage(file, { maxWidth: 800, maxHeight: 800, quality: 0.85 })
+                          .then((compressed) => {
+                            const updated = [...collaboratingOrgs];
+                            updated[idx] = { ...updated[idx], logo: compressed };
+                            updateCollaboratingOrgs(updated);
+                            updateSlotUrl(slotId, compressed);
+                            setImageErrors((prev) => ({ ...prev, [slotId]: false }));
+                            if (saveToServer) saveToServer();
+                          })
+                          .catch(() => {
+                            const reader = new FileReader();
+                            reader.onload = (evt) => {
+                              const dataUrl = evt.target?.result as string;
+                              if (dataUrl) {
+                                const updated = [...collaboratingOrgs];
+                                updated[idx] = { ...updated[idx], logo: dataUrl };
+                                updateCollaboratingOrgs(updated);
+                                updateSlotUrl(slotId, dataUrl);
+                                setImageErrors((prev) => ({ ...prev, [slotId]: false }));
+                                if (saveToServer) saveToServer();
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                          });
+                        e.target.value = '';
+                      }}
+                    />
+                  )}
+
                   {/* Top metallic glow bar */}
                   <div className="h-1 w-full bg-gradient-to-r from-transparent via-[#e5b94c]/60 to-transparent opacity-60 group-hover:opacity-100 transition-opacity" />
 
@@ -265,6 +311,17 @@ export const Collaborators: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => {
+                                  document.getElementById(`collab-file-${slotId}`)?.click();
+                                }}
+                                className="p-1 rounded bg-[#071326] text-[#e5b94c] hover:text-white border border-[#e5b94c]/30 hover:border-[#e5b94c] cursor-pointer transition-colors"
+                                title="Quick upload partner logo"
+                              >
+                                <Upload className="w-3 h-3" />
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
                                   setSelectedOrgIdx(idx);
                                   setModalTab('edit');
                                   setIsTextModalOpen(true);
@@ -279,7 +336,7 @@ export const Collaborators: React.FC = () => {
                                 type="button"
                                 onClick={() => openEditor(slotId)}
                                 className="p-1 rounded bg-[#071326] text-slate-400 hover:text-[#fcedbe] border border-[#e5b94c]/20 hover:border-[#e5b94c]/50 cursor-pointer transition-colors"
-                                title="Upload or customize partner logo"
+                                title="Customize partner logo in Media Studio"
                               >
                                 <Sliders className="w-3 h-3 text-[#e5b94c]" />
                               </button>
@@ -298,11 +355,13 @@ export const Collaborators: React.FC = () => {
                         }`}
                         title={!isPublishMode ? `Click to customize or enlarge ${org.shortName} logo in Media Studio` : undefined}
                       >
-                        {customLogo ? (
+                        {showLogo ? (
                           <img
                             src={customLogo}
                             alt={org.name}
                             style={customStyle}
+                            onError={() => setImageErrors((prev) => ({ ...prev, [slotId]: true }))}
+                            onLoad={() => setImageErrors((prev) => ({ ...prev, [slotId]: false }))}
                             className="max-h-full max-w-full object-contain filter drop-shadow-md transition-transform duration-300 group-hover:scale-105"
                           />
                         ) : (
@@ -321,9 +380,31 @@ export const Collaborators: React.FC = () => {
                         )}
 
                         {!isPublishMode && (
-                          <div className="absolute inset-0 bg-[#071326]/75 backdrop-blur-[1px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1.5 text-xs text-[#fcedbe] font-semibold pointer-events-none">
-                            <Sliders className="w-3.5 h-3.5 text-[#e5b94c]" />
-                            <span>Change Logo</span>
+                          <div className="absolute inset-0 bg-[#071326]/85 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                document.getElementById(`collab-file-${slotId}`)?.click();
+                              }}
+                              className="px-2.5 py-1.5 rounded-lg bg-[#e5b94c] text-[#071326] font-bold text-xs flex items-center gap-1 shadow-md hover:brightness-110 cursor-pointer"
+                              title="Upload picture from device"
+                            >
+                              <Upload className="w-3.5 h-3.5" />
+                              <span>Upload</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openEditor(slotId);
+                              }}
+                              className="px-2.5 py-1.5 rounded-lg bg-[#0f2448] text-[#fcedbe] border border-[#e5b94c]/40 font-semibold text-xs flex items-center gap-1 shadow-md hover:bg-[#163363] cursor-pointer"
+                              title="Fine-tune zoom and color in Media Studio"
+                            >
+                              <Sliders className="w-3.5 h-3.5 text-[#e5b94c]" />
+                              <span>Studio</span>
+                            </button>
                           </div>
                         )}
                       </div>
