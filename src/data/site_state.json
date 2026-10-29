@@ -825,8 +825,8 @@
       "id": "tier-f2f",
       "name": "Face-to-Face Attendee",
       "subtitle": "Full Day 1 In-Person Experience at Wyndham Hotel, Muscat",
-      "priceOman": "OMR 35",
-      "pricePhp": "PHP 5,250",
+      "priceOman": "OMR 0",
+      "pricePhp": "PHP 0",
       "type": "in-person",
       "recommended": true,
       "cpdValue": "Earn 10 CPD Units when combined with Day 2 online participation",
@@ -846,8 +846,8 @@
       "id": "tier-online-pro",
       "name": "Online Professional Attendee",
       "subtitle": "Day 2 Virtual Access Tailored for Working Engineers & IT Professionals",
-      "priceOman": "OMR 15",
-      "pricePhp": "PHP 2,250",
+      "priceOman": "OMR 0",
+      "pricePhp": "PHP 0",
       "type": "online",
       "cpdValue": "Eligible for Day 2 Workshop CPD credits",
       "features": [
@@ -866,8 +866,8 @@
       "id": "tier-online-student",
       "name": "Online Student Attendee",
       "subtitle": "Special Student Rate for Aspiring Computer Engineers & Tech Majors",
-      "priceOman": "OMR 8",
-      "pricePhp": "PHP 1,200",
+      "priceOman": "OMR 0",
+      "pricePhp": "PHP 0",
       "type": "student",
       "badge": "Student Discount",
       "cpdValue": "Student Training & Certification Hours",
@@ -1488,5 +1488,5 @@
       "description": "Faculty Member and Quality Assurance Officer - University of Technology and Applied Sciences–Al Mussanah"
     }
   },
-  "exportedAt": "2026-10-29T14:47:35.219Z"
+  "exportedAt": "2026-10-29T14:48:59.368Z"
 }
